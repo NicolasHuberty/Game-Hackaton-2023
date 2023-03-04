@@ -201,6 +201,6 @@ while game.GameFinish != True:
     pygame.display.flip()
     clock.tick(60)
     updateBackgroundImage()
-    pygame.display.update() 
+    
 
 pygame.quit()
