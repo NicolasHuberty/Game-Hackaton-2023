@@ -27,7 +27,7 @@ background_rect = background_image.get_rect()
 background_x = screen_width // 2 - background_rect.width // 2
 background_y = screen_height // 2 - background_rect.height // 2
 
-title_font = pygame.font.Font(font_path, 512)
+title_font = pygame.font.Font(font_path, int(((screen_width // 5) *1.5)/4*3))
 title = title_font.render("P-BOYZ", True, WHITE)
 
 text_font = pygame.font.Font(font_path, 69)
