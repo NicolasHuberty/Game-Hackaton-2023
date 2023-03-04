@@ -63,17 +63,27 @@ class Ball:
         self.direction[1] = direction[1] 
         self.speed = speed
         self.size = size
+        self.alive = True
 
     def bouger(self):
-        while true:
+        while self.alive:
             positionSuivante = []
             positionSuivante[0] = 1 if self.direction[0] > self.position[0] else -1 if self.direction[0] < self.position[0] else 0
             positionSuivante[1] = 1 if self.direction[1] > self.position[1] else -1 if self.direction[1] < self.position[1] else 0   
 
-            if Game.GetFroPosition(game,positionSuivante):
+            if positionSuivante[0] > game.x:
+                self.alive = False
+                return
+
+            next = Game.GetFroPosition(game,positionSuivante)
+
+            if next == None:
                 self.position = positionSuivante
             else:
                 self.changerDirrection()
+                Block.hit(next)
+
+
 
     
     def changerDirrection(self, direction_x , direction_y):
