@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Player 2</title>
+    <!---<script src="../templates/script.js"></script>-->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+      .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      
+      .bonus-button {
+        margin: 10px;
+        padding: 10px;
+        background-color: yellow;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: bold;
+      }
+      
+      .bonus-button:hover {
+        cursor: pointer;
+        background-color: orange;
+      }
+
+      .points-text {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 20px;
+        font-weight: bold;
+      }
+      .points-text2 {
+        position: absolute;
+        top: 30px;
+        right: 10px;
+        font-size: 20px;
+        font-weight: bold;
+      }
+      .pause-button {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        padding: 10px;
+        background-color: blue;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+      }
+      
+      .pause-button:hover {
+        cursor: pointer;
+        background-color: navy;
+      }
+
+    </style>
+  </head>
+  
+  <body>
+    <div id="pause-button" class="pause-button" onclick="updatePausePy()">Pause</div>
+    <div class="points-text">Points Player 1: <span id="points-player1">0</span></div>
+    <div class="points-text2">Points Player 2: <span id="points-player2">0</span></div>
+    <div class="container">
+    
+      <script>
+        var bonus5 = true;
+        var bonus6 = true;
+        var bonus7 = true;
+        var bonus8 = true;
+        var pointsPlayer1 = 0
+        var pointsPlayer2 = 0
+        var activeBonus = []
+        var pause = false 
+
+        function recupValeurInPy(){
+            fetch('/recupValeurInPy')
+                .then(response => response.json())
+            .then(data =>{
+                bonus5 = data[7],
+                bonus6 = data[8],
+                bonus7 = data[9],
+                bonus8 = data[10],
+                pointsPlayer1 = data[4],
+                pointsPlayer2 = data[5],
+                pause = data[6]
+            })
+        }
+
+        function updateBonusPy(bonus) {
+            $.ajax({
+                type: "POST",
+                url: "/update_bonus",
+                data: { bonus: bonus, bonusValue: 'Active' },
+                success: function(response) {
+                    console.log(response);
+                },
+                error: function(response) {
+                    console.log('cc', response);
+                }
+            });
+          }
+
+
+        function updatePausePy() {
+            $.ajax({
+                type: "POST",
+                url: "/update_pause",
+                data: { pause: !pause },
+                success: function(response) {
+                    console.log(response);
+                },
+                error: function(response) {
+                    console.log('pause', response);
+                }
+            });
+            }
+        
+        function pauseGame() {
+            if (pause){
+            document.getElementById('pause-button').textContent = 'Play'
+            }
+            if(!pause){
+                document.getElementById('pause-button').textContent = 'Pause'
+            }
+        }
+
+        function changePlayerPoint(){
+            document.getElementById('points-player1').textContent = pointsPlayer1;
+            document.getElementById('points-player2').textContent = pointsPlayer2;
+        }
+      
+        
+        setInterval(function() {
+            recupValeurInPy()
+            changePlayerPoint()
+            pauseGame()
+            //console.log('interval', pause)
+            if (pause == false) {
+                document.querySelector('.container').innerHTML = '';
+                if (bonus5== true) {
+                    document.querySelector('.container').innerHTML += '<button class="bonus-button" onclick="updateBonusPy(\'bonus5\')">bonus1</button>';
+                }
+                if (bonus6 == true) {
+                    document.querySelector('.container').innerHTML += '<button class="bonus-button" onclick="updateBonusPy(\'bonus6\')">bonus2</button>';
+                }
+                if (bonus7 == true) {
+                    document.querySelector('.container').innerHTML += '<button class="bonus-button" onclick="updateBonusPy(\'bonus7\')">bonus3</button>';
+                }
+                if (bonus8 == true) {
+                    document.querySelector('.container').innerHTML += '<button class="bonus-button" onclick="updateBonusPy(\'bonus8\')">bonus4</button>';
+                }
+            }
+            if(pause) {
+                document.querySelector('.container').innerHTML = '<h1>The Game is paused </h1>';
+            }
+        
+        
+        }, 500);
+      </script>
+    </div>
+  </body>
+</html>
