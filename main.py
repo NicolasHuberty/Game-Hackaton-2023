@@ -30,7 +30,7 @@ background_y = screen_height // 2 - background_rect.height // 2
 title_font = pygame.font.Font(font_path, int(((screen_width // 5) *1.5)/4*3))
 title = title_font.render("P-BOYZ", True, WHITE)
 
-text_font = pygame.font.Font(font_path, 69)
+text_font = pygame.font.Font(font_path, int(((screen_width // 5) *1.5)/4))
 text = text_font.render("Lancer le jeu sur votre telephone", True, WHITE)
 
 title_x = screen_width // 2 - title.get_width() // 2
