@@ -119,18 +119,23 @@ clock = pygame.time.Clock()
 
 
 #font_path = os.path.join("fonts", "Robus-BWqOd.otf")
+def updateBackgroundImage():
+    background_image = pygame.image.load("427159.jpg")
+    background_rect = background_image.get_rect()
+    background_x = screen_width // 2 - background_rect.width // 2
+    background_y = screen_height // 2 - background_rect.height // 2
+    screen.blit(background_image, (background_x, background_y))
 
-background_image = pygame.image.load("427159.jpg")
-background_rect = background_image.get_rect()
-background_x = screen_width // 2 - background_rect.width // 2
-background_y = screen_height // 2 - background_rect.height // 2
-screen.blit(background_image, (background_x, background_y))
-
+updateBackgroundImage()
 game = Game(100,100,20)
 
 #gestion de la barre
-paddle = pygame.Rect(screen_width // 2 - 70, screen_height - 50, 140, 20)
-paddle_speed = 0
+paddleRed = pygame.Rect(screen_width // 1.5 - 70, screen_height - 50, 140, 20)
+paddleBlue = pygame.Rect(screen_width // 2.5 - 70, screen_height - 50, 140, 20)
+
+paddle_speedRed = 0
+paddle_speedBlue = 0
+
 
 print("screen_width ")
 print(screen_width)
@@ -151,21 +156,51 @@ for i in range(screen_width// (brick_spacing + brick_width)):
 
 while game.GameFinish != True:
 
-    # Move the paddle
-    paddle.x += paddle_speed
-    if paddle.left < 0:
-        paddle.left = 0
-    elif paddle.right > screen_width:
-        paddle.right = screen_width
-    
-    pygame.draw.rect(screen, (0, 255, 0), paddle)
+    # Handle events
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                paddle_speedRed = -10
+            elif event.key == pygame.K_RIGHT:
+                paddle_speedRed = 10
+            if event.key == pygame.K_q:
+                paddle_speedBlue = -10
+            elif event.key == pygame.K_d:
+                paddle_speedBlue = 10
+        elif event.type == pygame.KEYUP:
+            if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                paddle_speedRed = 0
+            if event.key == pygame.K_q or event.key == pygame.K_d:
+                paddle_speedBlue = 0
+   
+    # Move the paddleRed
+    paddleRed.x += paddle_speedRed
+    if paddleRed.left < 0:
+        paddleRed.left = 0
+    elif paddleRed.right > screen_width:
+        paddleRed.right = screen_width
+
+      # Move the paddleBlue
+    paddleBlue.x += paddle_speedBlue
+    if paddleBlue.left < 0:
+        paddleBlue.left = 0
+    elif paddleBlue.right > screen_width:
+        paddleBlue.right = screen_width
+
+
+    pygame.draw.rect(screen, (255, 0, 0), paddleRed)
+    pygame.draw.rect(screen, (0, 0, 255), paddleBlue)
+
     for brick in bricks:
         pygame.draw.rect(screen, (255, 0, 0), brick)
     
     # Update the screen and clock
     pygame.display.flip()
     clock.tick(60)
-
+    updateBackgroundImage()
     pygame.display.update() 
 
 pygame.quit()
