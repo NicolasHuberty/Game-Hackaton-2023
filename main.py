@@ -26,8 +26,8 @@ class Game:
         bonusRed = []
         global start
         start = False
-        global breakGame
-        breakGame = False
+        global pause
+        pause = False
 
         
 
