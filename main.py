@@ -1,110 +1,57 @@
-import math
-import random
-import sys
+import pygame
+import os 
+import subprocess
+from pygame.locals import *
+
+pygame.init()
+
+info = pygame.display.Info()
+screen_width, screen_height = info.current_w, info.current_h
+'''screen_width = 800
+screen_height = 600'''
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("P-BOYZ")
+clock = pygame.time.Clock()
 
 
+font_path = os.path.join("fonts", "Robus-BWqOd.otf")
 
-class Game:
-    def __init__(self, x, y, nbrBlocks):
-        self.posBarreRed = x/2
-        self.posBarreBlue = x/2
-        self.x = x
-        self.y = y
-        self.nbrBlocks = nbrBlocks
-        self.GameFinish = False
-        self.matrix = [[0 for j in range(y)] for i in range(x)]
+background_image = pygame.image.load("427159.jpg")
+background_rect = background_image.get_rect()
+background_x = screen_width // 2 - background_rect.width // 2
+background_y = screen_height // 2 - background_rect.height // 2
 
-        global pointBlue
-        pointBlue = 0
-        global pointRed
-        pointRed = 0
-        global game 
-        game = self
-        global bonusBlue
-        bonusBlue = []
-        global bonusRed
-        bonusRed = []
-        global start
-        start = False
-        global pause
-        pause = False
+title_font = pygame.font.Font(font_path, 75)
+title = title_font.render("P-BOYZ", True, (255, 255, 255))
 
-        
+text_font = pygame.font.Font(font_path, 69)
+text = text_font.render("Lancer le jeu sur votre telephone", True, (255, 255, 255))
 
-        
-    def choose(self,choose):
-        if choose == 1:
-            for i in range(0,(self.x),1):
-                for j in range(0,(self.y),1):
-                    if i == 0 or j == 0:
-                        self.matrix[i][j] = Block([i,j],False)
+title_x = screen_width // 2 - title.get_width() // 2
+title_y = 150
 
-            for i in range(1,(self.x-10),1):
-                for j in range(1,(self.y-1),1):
-                        self.matrix[i][j] = Block([i,j],True)
-            
+text_x = screen_width // 2 - text.get_width() // 2
+text_y = screen_height // 1.5 - text.get_height() // 2
 
-    def removeBlock(self, pos):
-        self.matrix[pos[0],pos[1]] = None
-        self.nbrBlocks -=1
+# Define the clickable area of the text as a Rect object
+text_rect = text.get_rect(center=(text_x + text.get_width() // 2, text_y + text.get_height() // 2))
 
-        if self.nbrBlocks <= 0:
-            self.GameFinish == True
-    
-    def GetFroPosition(self, pos):
-        return self.matrix[pos[0]][pos[1]]
-                
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            running = False
+        elif event.type == MOUSEBUTTONDOWN:
+            # Check if the mouse cursor is within the clickable area
+            if text_rect.collidepoint(event.pos):
+                subprocess.Popen(["python", "game.py"])
+                pygame.quit()
 
-class Block:
-    def __init__(self, pos, outLigne):
-        self.position = pos
-        if outLigne == True:
-            self.durte = 1
-        else:
-            self.durte = sys.maxsize
-    
-    def hit(self):
-        self.durte = self.durte -1
+    screen.blit(background_image, (background_x, background_y))
 
-        if self.durte <= 0:
-            Game.removeBlock(self.position)
+    screen.blit(title, (title_x, title_y))
+    screen.blit(text, (text_x, text_y))
 
+    pygame.display.update()
 
-
-class Ball:
-    def __init__(self, pos , direction , speed, size, color):
-        self.position = pos
-        self.direction = []
-        self.direction[0] = direction[0] 
-        self.direction[1] = direction[1] 
-        self.speed = speed
-        self.size = size
-        self.color = color
-        self.alive = True
-
-    def bouger(self):
-        while self.alive:
-            positionSuivante = []
-            positionSuivante[0] = 1 if self.direction[0] > self.position[0] else -1 if self.direction[0] < self.position[0] else 0
-            positionSuivante[1] = 1 if self.direction[1] > self.position[1] else -1 if self.direction[1] < self.position[1] else 0   
-
-            if positionSuivante[0] > game.x:
-                self.alive = False
-                return
-
-            next = Game.GetFroPosition(game,positionSuivante)
-
-            if next == None:
-                self.position = positionSuivante
-            else:
-                self.changerDirrection()
-                Block.hit(next)
-
-
-
-    
-    def changerDirrection(self, direction_x , direction_y):
-        self.direction_x = direction_x
-        self.direction_y = direction_y
-
-
+pygame.quit()
