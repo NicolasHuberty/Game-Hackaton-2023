@@ -21,7 +21,7 @@ background_rect = background_image.get_rect()
 background_x = screen_width // 2 - background_rect.width // 2
 background_y = screen_height // 2 - background_rect.height // 2
 
-title_font = pygame.font.Font(font_path, 75)
+title_font = pygame.font.Font(font_path, 512)
 title = title_font.render("P-BOYZ", True, (255, 255, 255))
 
 text_font = pygame.font.Font(font_path, 69)
@@ -46,6 +46,9 @@ while running:
             if text_rect.collidepoint(event.pos):
                 subprocess.Popen(["python", "game.py"])
                 pygame.quit()
+        elif event.type==pygame.KEYDOWN:
+                if event.key==pygame.K_x: #Pressing the x Key will quit the game
+                     running=False  
 
     screen.blit(background_image, (background_x, background_y))
 
