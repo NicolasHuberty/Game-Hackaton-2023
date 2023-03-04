@@ -6,14 +6,30 @@ import sys
 
 class Game:
     def __init__(self, x, y, nbrBlocks):
+        self.posBarreRed = x/2
+        self.posBarreBlue = x/2
         self.x = x
         self.y = y
         self.nbrBlocks = nbrBlocks
         self.GameFinish = False
         self.matrix = [[0 for j in range(y)] for i in range(x)]
 
+        global pointBlue
+        pointBlue = 0
+        global pointRed
+        pointRed = 0
         global game 
         game = self
+        global bonusBlue
+        bonusBlue = []
+        global bonusRed
+        bonusRed = []
+        global start
+        start = False
+        global breakGame
+        breakGame = False
+
+        
 
         
     def choose(self,choose):
@@ -56,13 +72,14 @@ class Block:
 
 
 class Ball:
-    def __init__(self, pos , direction , speed, size):
+    def __init__(self, pos , direction , speed, size, color):
         self.position = pos
         self.direction = []
         self.direction[0] = direction[0] 
         self.direction[1] = direction[1] 
         self.speed = speed
         self.size = size
+        self.color = color
         self.alive = True
 
     def bouger(self):
