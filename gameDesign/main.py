@@ -5,12 +5,6 @@ from pygame.locals import *
 
 pygame.init()
 
-WHITE = (255,255,255)
-BLACK = (0,0,0)
-RED =(255,0,0)
-GREEN =(0,255,0)
-BLEU =(0,0,255)
-
 info = pygame.display.Info()
 screen_width, screen_height = info.current_w, info.current_h
 '''screen_width = 800
@@ -28,10 +22,10 @@ background_x = screen_width // 2 - background_rect.width // 2
 background_y = screen_height // 2 - background_rect.height // 2
 
 title_font = pygame.font.Font(font_path, 512)
-title = title_font.render("P-BOYZ", True, WHITE)
+title = title_font.render("P-BOYZ", True, (255, 255, 255))
 
 text_font = pygame.font.Font(font_path, 69)
-text = text_font.render("Lancer le jeu sur votre telephone", True, WHITE)
+text = text_font.render("Lancer le jeu sur votre telephone", True, (255, 255, 255))
 
 title_x = screen_width // 2 - title.get_width() // 2
 title_y = 150
@@ -50,7 +44,7 @@ while running:
         elif event.type == MOUSEBUTTONDOWN:
             # Check if the mouse cursor is within the clickable area
             if text_rect.collidepoint(event.pos):
-                subprocess.Popen(["python", "game.py"])
+                subprocess.Popen(["python", "gameDesign/game.py"])
                 pygame.quit()
         elif event.type==pygame.KEYDOWN:
                 if event.key==pygame.K_x: #Pressing the x Key will quit the game

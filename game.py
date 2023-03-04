@@ -6,6 +6,11 @@ import os
 import subprocess
 from pygame.locals import *
 
+WHITE = (255,255,255)
+BLACK = (0,0,0)
+RED =(255,0,0)
+GREEN =(0,255,0)
+BLEU =(0,0,255)
 
 class Game:
     def __init__(self, x, y, nbrBlocks):
@@ -141,13 +146,13 @@ print("screen_width ")
 print(screen_width)
 
 #creation des briques
-brick_width = 20
-brick_height = 10
-brick_spacing = 5
+brick_width = 40
+brick_height = 20
+brick_spacing = 10
 bricks = []
 for i in range(screen_width// (brick_spacing + brick_width)):
     brick_x = brick_spacing + i * (brick_width + brick_spacing)
-    for j in range((screen_height // (brick_spacing + brick_height))//2):
+    for j in range(int((screen_height // (brick_spacing + brick_height)//1.5))):
         brick_y = brick_spacing + j * (brick_height + brick_spacing)
         brick_rect = pygame.Rect(brick_x, brick_y, brick_width, brick_height)
         bricks.append(brick_rect)
@@ -191,11 +196,13 @@ while game.GameFinish != True:
         paddleBlue.right = screen_width
 
 
-    pygame.draw.rect(screen, (255, 0, 0), paddleRed)
-    pygame.draw.rect(screen, (0, 0, 255), paddleBlue)
+    pygame.draw.rect(screen, RED, paddleRed)
+    pygame.draw.rect(screen, BLEU, paddleBlue)
+    pygame.draw.circle(screen, BLEU, (480, 540), 10)
+    pygame.draw.circle(screen, RED, (1440, 540), 10)
 
     for brick in bricks:
-        pygame.draw.rect(screen, (255, 0, 0), brick)
+        pygame.draw.rect(screen, RED, brick)
     
     # Update the screen and clock
     pygame.display.flip()
