@@ -510,12 +510,12 @@ def UI():
             print("RedWins")
             print(nbrBlocks.get())
             print("nbr poins r : ", pointsPlayer1.get())
-            end.set(True)
+            #end.set(True)
             playsound.playsound("./Redwins.mp3")
         if nbrRedBalls.get() <= 0:
             print("nbr poins b : ", pointsPlayer2.get())
             print("BlueWin")
-            end.set(True)
+            #end.set(True)
             playsound.playsound("./Bluewins.mp3")
         
     pygame.quit()
