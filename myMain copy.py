@@ -23,11 +23,11 @@ class Game():
         self.bonus6 = True
         self.bonus7 = True
         self.bonus8 = True
-        #ui = Thread(target = self.ui)
-        #xPos = Thread(target = self.xPos)
+        ui = Thread(target = self.ui)
+        xPos = Thread(target = self.xPos)
         thread3 = Process(target = self.phone_connection)
-        #ui.start()
-        #xPos.start()
+        ui.start()
+        xPos.start()
         thread3.start()
         
     def phone_connection(self):
@@ -85,6 +85,7 @@ class Game():
             ret, frame = cap.read()
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             faces = face_cascade.detectMultiScale(gray, scaleFactor=1.3, minNeighbors=5)
+            faces = sorted(faces, key=lambda x: x[0])
             for (x, y, w, h) in faces:
                 cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
             if(len(faces) == 2):
@@ -230,14 +231,14 @@ class Game():
                         paddle_speedBlue = 0
         
             # Move the paddleRed
-            paddleRed.x = 1900 - (1900/500 * self.x1)
+            paddleRed.x = 1900 - 2.5*(1900/500 * self.x1)
             if paddleRed.left < 0:
                 paddleRed.left = 0
             elif paddleRed.right > screen_width:
                 paddleRed.right = screen_width
 
             # Move the paddleBlue
-            paddleBlue.x = 1900 - (1900/500 * self.x2)
+            paddleBlue.x = 1900 - 2.5*(1900/500 * (self.x2-250))
             if paddleBlue.left < 0:
                 paddleBlue.left = 0
             elif paddleBlue.right > screen_width:
