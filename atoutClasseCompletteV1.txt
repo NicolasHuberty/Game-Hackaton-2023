@@ -1,0 +1,70 @@
+```py
+ class Atout():
+        def __init__(self,x,y,radius,nbrAtout):
+            self.x = x
+            self.y = y
+            self.radius = radius
+            self.velocityX = 0
+            self.velocityY = ballVelocity
+            self.nbrAtout = nbrAtout
+            self.color = WHITE
+
+        def update(self):
+
+            self.y += self.velocityY /2
+
+            atout = self.draw()
+            
+            
+            if atout.colliderect(paddleRed):   
+                print("INNNNRed")
+                self.x = 2 * screen_width
+                self.y = screen_height//2
+                self.velocityX = 1
+                self.velocityY = 0
+                if self.nbrAtout == 1:
+                    bonus1.set(True)
+                if self.nbrAtout == 2:
+                    bonus2.set(True)
+                if self.nbrAtout == 3:
+                    bonus3.set(True)
+                if self.nbrAtout == 4:
+                    bonus4.set(True)
+            elif atout.colliderect(paddleRed):
+                print("INNNN")
+                self.x = 2 * screen_width
+                self.y = screen_height//2   
+                self.velocityX = 0
+                self.velocityY = 0
+                if self.nbrAtout == 1:
+                    bonus5.set(True)
+                if self.nbrAtout == 2:
+                    bonus6.set(True)
+                if self.nbrAtout == 3:
+                    bonus7.set(True)
+                if self.nbrAtout == 4:
+                    bonus8.set(True)
+
+            if self.y + self.radius > screen_height:
+                self.x = 2 * screen_width
+                self.y = screen_height//2   
+                self.velocityX = 0
+                self.velocityY = 0
+        
+        def draw(self):
+            if self.nbrAtout == 1:
+                image = pygame.image.load("x3.png").convert()
+            elif self.nbrAtout == 2:
+                image = pygame.image.load("+3.png").convert()
+            elif self.nbrAtout == 3:
+                image = pygame.image.load("ext.png").convert()
+            else:
+                image = pygame.image.load("int.png").convert()
+
+            image_rect = pygame.Rect(self.x, self.y, self.radius/2, self.radius/2)
+            image_resized = pygame.transform.scale(image, (self.radius/2, self.radius/2))            
+            screen.blit(image_resized, image_rect)
+            
+        
+            return pygame.draw(image_rect)
+```

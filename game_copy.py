@@ -206,7 +206,16 @@ class end():
 end = end()
 def setAllData():
     response = requests.get("http://localhost:5000/recupValeurInPy").json()
+    bonus1.set(response[0])
+    bonus2.set(response[1])
+    bonus3.set(response[2])
+    bonus4.set(response[3])
     pause.set(response[6])
+    bonus5.set(response[7])
+    bonus6.set(response[8])
+    bonus7.set(response[9])
+    bonus8.set(response[10])
+    
 
 WHITE = (255,255,255)
 BLACK = (0,0,0)
@@ -261,39 +270,58 @@ def UI():
 
             atout = self.draw()
             
+            
+            if atout.colliderect(paddleRed):   
+                print("INNNNRed")
+                self.x = 2 * screen_width
+                self.y = screen_height//2
+                self.velocityX = 1
+                self.velocityY = 0
+                if self.nbrAtout == 1:
+                    bonus1.set(True)
+                if self.nbrAtout == 2:
+                    bonus2.set(True)
+                if self.nbrAtout == 3:
+                    bonus3.set(True)
+                if self.nbrAtout == 4:
+                    bonus4.set(True)
+            elif atout.colliderect(paddleRed):
+                print("INNNN")
+                self.x = 2 * screen_width
+                self.y = screen_height//2   
+                self.velocityX = 0
+                self.velocityY = 0
+                if self.nbrAtout == 1:
+                    bonus5.set(True)
+                if self.nbrAtout == 2:
+                    bonus6.set(True)
+                if self.nbrAtout == 3:
+                    bonus7.set(True)
+                if self.nbrAtout == 4:
+                    bonus8.set(True)
+
             if self.y + self.radius > screen_height:
-                if self.color == RED:    
-                    print("INNNN")
-                    self.x = 2 * screen_width
-                    self.y = screen_height//2
-                    self.velocityX = 1
-                    self.velocityY = 0
-                    if self.nbrAtout == 1:
-                        bonus1.set(True)
-                    if self.nbrAtout == 2:
-                        bonus2.set(True)
-                    if self.nbrAtout == 3:
-                        bonus3.set(True)
-                    if self.nbrAtout == 4:
-                        bonus4.set(True)
-                        
-                else:
-                    print("INNNN")
-                    self.x = 2 * screen_width
-                    self.y = screen_height//2   
-                    self.velocityX = 0
-                    self.velocityY = 0
-                    if self.nbrAtout == 1:
-                        bonus5.set(True)
-                    if self.nbrAtout == 2:
-                        bonus6.set(True)
-                    if self.nbrAtout == 3:
-                        bonus7.set(True)
-                    if self.nbrAtout == 4:
-                        bonus8.set(True)
-        
+                self.x = 2 * screen_width
+                self.y = screen_height//2   
+                self.velocityX = 0
+                self.velocityY = 0
+
         def draw(self):
-            return pygame.draw.circle(screen, self.color, (int(self.x), int(self.y)), self.radius)
+            if self.nbrAtout == 1:
+                image = pygame.image.load("x3.png").convert()
+            elif self.nbrAtout == 2:
+                image = pygame.image.load("+3.png").convert()
+            elif self.nbrAtout == 3:
+                image = pygame.image.load("ext.png").convert()
+            else:
+                image = pygame.image.load("int.png").convert()
+
+            image_rect = pygame.Rect(self.x, self.y, self.radius/2, self.radius/2)
+            image_resized = pygame.transform.scale(image, (self.radius/2, self.radius/2))            
+            screen.blit(image_resized, image_rect)
+            
+
+            return pygame.draw(image_rect)
     class Ball:
         def __init__(self, x, y, radius, color):
             self.x = x

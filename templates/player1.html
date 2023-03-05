@@ -143,16 +143,16 @@
           pauseGame()
             if (pause == false) {
                 document.querySelector('.container').innerHTML = '';
-                if (bonus1== true) {
+                if (bonus1== "true") {
                     document.querySelector('.container').innerHTML += '<button class="bonus-button" onclick="updateBonusPy(\'bonus1\')">bonus1</button>';
                 }
-                if (bonus2 == true) {
+                if (bonus2 == "true") {
                     document.querySelector('.container').innerHTML += '<button class="bonus-button" onclick="updateBonusPy(\'bonus2\')">bonus2</button>';
                 }
-                if (bonus3 == true) {
+                if (bonus3 == "true") {
                     document.querySelector('.container').innerHTML += '<button class="bonus-button" onclick="updateBonusPy(\'bonus3\')">bonus3</button>';
                 }
-                if (bonus4 == true) {
+                if (bonus4 == "true") {
                     document.querySelector('.container').innerHTML += '<button class="bonus-button" onclick="updateBonusPy(\'bonus4\')">bonus4</button>';
                 }
             }
