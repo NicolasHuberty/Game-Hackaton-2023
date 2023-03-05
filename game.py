@@ -1,69 +1,228 @@
 import math
 import random
 import sys
+import time
 import pygame
 import os 
 import subprocess
+import cv2
+from threading import Thread
+from multiprocessing import Process
 from pygame.locals import *
+from flask import Flask, render_template, request, jsonify
+
+global_var = 0
+class x1():
+    def __init__(self):
+        self.x1 = 0
+    def get(self):
+        return self.x1
+    def set(self,value):
+        self.x1 = value
+x1 = x1()
+class x2():
+    def __init__(self):
+        self.x2 = 0
+    def get(self):
+        return self.x2
+    def set(self,value):
+        self.x2 = value
+x2 = x2()
+class bonus1():
+    def __init__(self):
+        self.bonus1 = 0
+    def get(self):
+        return self.bonus1
+    def set(self,value):
+        self.bonus1 = value
+bonus1 = bonus1()
+
+class bonus2():
+    def __init__(self):
+        self.bonus2 = 0
+    def get(self):
+        return self.bonus2
+    def set(self,value):
+        self.bonus2 = value
+bonus2 = bonus2()
+
+class bonus3():
+    def __init__(self):
+        self.bonus3 = 0
+    def get(self):
+        return self.bonus3
+    def set(self,value):
+        self.bonus3 = value
+bonus3 = bonus3()
+
+class bonus4():
+    def __init__(self):
+        self.bonus4 = 0
+    def get(self):
+        return self.bonus4
+    def set(self,value):
+        self.bonus4 = value
+bonus4 = bonus4()
+
+class bonus5():
+    def __init__(self):
+        self.bonus5 = 0
+    def get(self):
+        return self.bonus5
+    def set(self,value):
+        self.bonus5 = value
+bonus5 = bonus5()
+
+class bonus6():
+    def __init__(self):
+        self.bonus6 = 0
+    def get(self):
+        return self.bonus6
+    def set(self,value):
+        self.bonus6 = value
+bonus6 = bonus6()
+
+class bonus7():
+    def __init__(self):
+        self.bonus7 = 0
+    def get(self):
+        return self.bonus7
+    def set(self,value):
+        self.bonus7 = value
+bonus7 = bonus7()
+
+class bonus8():
+    def __init__(self):
+        self.bonus8 = 0
+    def get(self):
+        return self.bonus8
+    def set(self,value):
+        self.bonus8 = value
+bonus8 = bonus8()
+
+class pointsPlayer1 ():
+    def __init__(self):
+        self.pointsPlayer1  = 0
+    def get(self):
+        return self.pointsPlayer1 
+    def set(self,value):
+        self.pointsPlayer1  = value
+pointsPlayer1 = pointsPlayer1()
+
+class pointsPlayer2 ():
+    def __init__(self):
+        self.pointsPlayer2  = 0
+    def get(self):
+        return self.pointsPlayer2 
+    def set(self,value):
+        self.pointsPlayer2  = value
+pointsPlayer2 = pointsPlayer2()
+
+
+class start ():
+    def __init__(self):
+        self.start  = False
+    def get(self):
+        return self.start
+    def set(self,value):
+        self.start  = value
+start = start()
+
+class pause ():
+    def __init__(self):
+        self.pause  = False
+    def get(self):
+        return self.pause 
+    def set(self,value):
+        self.pause  = value
+pause = pause()
+    
+
+
+ballVelocity = 5
+ballRadius = 5
+sprites = []
+end = False
+
 WHITE = (255,255,255)
 BLACK = (0,0,0)
 RED =(255,0,0)
 GREEN =(0,255,0)
 BLUE =(0,0,255)
+def phoneConnection():
+    app = Flask(__name__)
+    @app.route('/update_bonus', methods=['POST'])
+    def update_bonus():
+        bonus = str(request.form['bonus'])
+        bonusValue = request.form.get('bonusValue')
+        if bonus == 'bonus1' : bonus1.set(bonusValue)
+        elif bonus == 'bonus2' : bonus2.set(bonusValue)
+        elif bonus == 'bonus3' : bonus3.set(bonusValue)
+        elif bonus == 'bonus5' : bonus5.set(bonusValue)
+        elif bonus == 'bonus6' : bonus6.set(bonusValue)
+        elif bonus == 'bonus7' : bonus7.set(bonusValue)
+        elif bonus == 'bonus8' : bonus8.set(bonusValue)
+        
+        return f"{bonus} : {bonusValue}"
 
-class Game:
-    def __init__(self, x, y, nbrBlocks):
-        self.posBarreRed = x/2
-        self.posBarreBlue = x/2
-        self.x = x
-        self.y = y
-        self.nbrBlocks = nbrBlocks
-        self.GameFinish = False
-        self.matrix = [[0 for j in range(y)] for i in range(x)]
-        self.nbrRedBalls = 1
-        self.nbrBlueBalls = 1
+    @app.route('/update_pause', methods=['POST'])
+    def update_pause():
+        #print(str(request.form['pause']) == "true")
+        pause.set(str(request.form['pause']) == "true")
+        
+        
+        return f"py pause : {pause.get()}"
 
-        global pointBlue
-        pointBlue = 0
-        global pointRed
-        pointRed = 0
-        global bonusBlue
-        bonusBlue = []
-        global bonusRed
-        bonusRed = []
-        global start
-        start = False
-        global pause
-        pause = False
-        global ballRadius
-        ballRadius = 10
-        global ballVelocity
-        ballVelocity = 5
-        global sprites
-        sprites = []
 
-    def choose(self,choose):
-        if choose == 1:
-            for i in range(0,(self.x),1):
-                for j in range(0,(self.y),1):
-                    if i == 0 or j == 0:
-                        self.matrix[i][j] = Block([i,j],False)
+    @app.route('/recupValeurInPy')
+    def get_bonus1():
+        return jsonify(bonus1.get(),bonus2.get(),bonus3.get(),bonus4.get(),pointsPlayer1.get(),pointsPlayer2.get(),pause.get(),bonus5.get(),bonus6.get(),bonus7.get(),bonus8.get())
 
-            for i in range(1,(self.x-10),1):
-                for j in range(1,(self.y-1),1):
-                        self.matrix[i][j] = Block([i,j],True)
-            
 
-    def removeBlock(self, pos):
-        self.matrix[pos[0],pos[1]] = None
-        self.nbrBlocks -=1
 
-        if self.nbrBlocks <= 0:
-            self.GameFinish == True
+    @app.route("/")
+    def index():
+        # Pass global variable value to template
+        return render_template("index.html", global_var=global_var)
+
+    @app.route("/player1")
+    def player1():
+        # Pass global variable value to template
+        return render_template("player1.html", global_var=global_var)
+
+    @app.route("/player2")
+    def player2():
+        # Pass global variable value to template
+        return render_template("player2.html", global_var=global_var)
+    app.run(host="0.0.0.0", port=5000, debug=True)
+
+
+
+def getxPos():
+    face_cascade = cv2.CascadeClassifier('./haarcascade_frontalface_default.xml')
+    cap = cv2.VideoCapture(0)
+    while True:
+        ret, frame = cap.read()
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        faces = face_cascade.detectMultiScale(gray, scaleFactor=1.3, minNeighbors=5)
+        faces = sorted(faces, key=lambda x: x[0])
+        for (x, y, w, h) in faces:
+            cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+        if(len(faces) == 2):
+            face2 = faces[1][0]
+            face1 = faces[0][0]
+            x1.set(face1)
+            x2.set(face2)
+        cv2.imshow('frame', frame)
+        if cv2.waitKey(1) == ord('q'):
+            break
+    cap.release()
+    cv2.destroyAllWindows()
     
-    def GetFroPosition(self, pos):
-        return self.matrix[pos[0]][pos[1]]
-                
+xPos = Thread(target = getxPos)
+xPos.start()
+phoneCo = Process(target = phoneConnection)
+phoneCo.start()
 
 class Ball:
     def __init__(self, x, y, radius, color):
@@ -71,6 +230,8 @@ class Ball:
         self.y = y
         self.radius = radius
         self.color = color
+        self.nbrBlueBalls = 0
+        self.nbrRedBalls = 0
         
         if random.randint(0,1) == 1:
             self.velocityX = ballVelocity 
@@ -81,10 +242,7 @@ class Ball:
             self.velocityY = ballVelocity
         else:
             self.velocityY = -ballVelocity
-        '''
-        self.velocityX =  random.randint(-15,15)
-        self.velocityY =  random.randint(-15,15)
-        '''
+
     def update(self):
         self.x += self.velocityX /2
         self.y += self.velocityY /2
@@ -99,14 +257,18 @@ class Ball:
                     self.velocityY = -self.velocityY
                 if (ball.right > brick.left and ball.left < brick.left) or (ball.left < brick.right and ball.right > brick.right):
                     self.velocityX = -self.velocityX
-                break
+            
+                if self.color == RED:
+                    pointsPlayer1.set(pointsPlayer1.get()+1)
+                else:
+                    pointsPlayer2.set(pointsPlayer2.get()+1)  
+                break  
         
        
             
         
         if self.x - self.radius < 0  or self.x + self.radius > screen_width:
-            self.velocityX *= -1
-        
+            self.velocityX *= -1        
         if self.color == RED:
             if ball.colliderect(paddleRed):
                 self.velocityY *= -1
@@ -115,8 +277,7 @@ class Ball:
                     self.y = screen_height//2
                     self.velocityX = 1
                     self.velocityY = 0
-                    game.nbrRedBalls -=1
-                    print(game.nbrRedBalls)
+                    self.nbrRedBalls -=1
         else:
             if ball.colliderect(paddleBlue):
                 self.velocityY *= -1
@@ -125,14 +286,11 @@ class Ball:
                 self.y = screen_height//2   
                 self.velocityX = 0
                 self.velocityY = 0
-                game.nbrBlueBalls -=1
-                print(game.nbrBlueBalls)
+                self.nbrBlueBalls -=1
 
         if  self.y - self.radius < 0 : 
             self.velocityY *= -1
            
-
-        
     def draw(self):
         return pygame.draw.circle(screen, self.color, (int(self.x), int(self.y)), self.radius)
 
@@ -140,14 +298,10 @@ pygame.init()
 
 info = pygame.display.Info()
 screen_width, screen_height = info.current_w, info.current_h
-'''screen_width = 800
-screen_height = 600'''
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("P-BOYZ")
 clock = pygame.time.Clock()
 
-
-#font_path = os.path.join("fonts", "Robus-BWqOd.otf")
 def updateBackgroundImage():
     background_image = pygame.image.load("427159.jpg")
     background_rect = background_image.get_rect()
@@ -156,8 +310,6 @@ def updateBackgroundImage():
     screen.blit(background_image, (background_x, background_y))
 
 updateBackgroundImage()
-game = Game(100,100,20)
-
 redBasePlace = []
 redBasePlace = screen_width // 1.5 - 70, screen_height - 50
 blueBasePlace = []
@@ -209,7 +361,10 @@ for i in range(screen_width// (brick_spacing + brick_width)):
 
 
 
-while game.GameFinish != True:
+while end != True:
+    
+    while pause.get():
+        time.sleep(0.1)
 
     # Handle events
     for event in pygame.event.get():
@@ -235,8 +390,7 @@ while game.GameFinish != True:
                         ball = Ball(x, y, ballRadius, RED)
                         newRedBalls.append(ball)
                         sprites.append(ball.draw())
-                        game.nbrRedBalls +=1
-                print(game.nbrRedBalls)
+                        self.nbrRedBalls +=1
 
                 for ball in newRedBalls:
                     redBalls.append(ball)
@@ -251,8 +405,7 @@ while game.GameFinish != True:
                         ball = Ball(x, y, ballRadius, BLUE)
                         newBlueBalls.append(ball)
                         sprites.append(ball.draw())
-                        game.nbrBlueBalls +=1
-                print(game.nbrBlueBalls)
+                        self.nbrBlueBalls +=1
                 for ball in newBlueBalls:
                     blueBalls.append(ball)
         elif event.type == pygame.KEYUP:
@@ -260,10 +413,6 @@ while game.GameFinish != True:
                 paddle_speedRed = 0
             if event.key == pygame.K_q or event.key == pygame.K_d:
                 paddle_speedBlue = 0
-        
-
-
-
 
     #move the balls
     for ball in redBalls:
@@ -272,23 +421,20 @@ while game.GameFinish != True:
     for ball in blueBalls:
         ball.update()
     #  print("BlueBalls update")
-      
+    print("x1: ",x1.get(),"pause: ",pause.get()," user1 point: ",pointsPlayer1.get())
     # Move the paddleRed
-    paddleRed.x += paddle_speedRed
+    paddleRed.x = 1900 - 2.5*((1900/500)*x1.get())
     if paddleRed.left < 0:
         paddleRed.left = 0
     elif paddleRed.right > screen_width:
         paddleRed.right = screen_width
 
-      # Move the paddleBlue
-    paddleBlue.x += paddle_speedBlue
+    # Move the paddleBlue
+    paddleBlue.x = 1900 - 2.5*(1900/500*(x2.get()-250))
     if paddleBlue.left < 0:
         paddleBlue.left = 0
     elif paddleBlue.right > screen_width:
         paddleBlue.right = screen_width
-
-    
-
 
     pygame.draw.rect(screen, RED, paddleRed)
     pygame.draw.rect(screen, BLUE, paddleBlue)
@@ -300,10 +446,10 @@ while game.GameFinish != True:
     clock.tick(60)
     updateBackgroundImage()    
 
-    if game.nbrBlueBalls <= 0:
-        game.GameFinish = True
-    if game.nbrRedBalls <= 0:
-        game.GameFinish = True
+    #if self.nbrBlueBalls <= 0:
+        #end = True
+    #if self.nbrRedBalls <= 0:
+        #end = True
     
 
 pygame.quit()
