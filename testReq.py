@@ -131,7 +131,7 @@ pointsPlayer2 = pointsPlayer2()
 
 class start ():
     def __init__(self):
-        self.start  = False
+        self.start  = -1
     def get(self):
         return self.start
     def set(self,value):
@@ -166,7 +166,7 @@ def update_bonus():
 @app.route('/start', methods=['POST'])
 def start_game():
      mapNumber = int(request.form['mapNumber'])
-     start.set(True)
+     start.set(mapNumber)
      return f"Le jeux à commencé sur la map : {mapNumber}"
      
         
