@@ -5,7 +5,6 @@ import pygame
 import os 
 import subprocess
 from pygame.locals import *
-
 WHITE = (255,255,255)
 BLACK = (0,0,0)
 RED =(255,0,0)
@@ -40,6 +39,8 @@ class Game:
         ballRadius = 10
         global ballVelocity
         ballVelocity = 5
+        global sprites
+        sprites = []
 
     def choose(self,choose):
         if choose == 1:
@@ -110,12 +111,22 @@ class Ball:
             if ball.colliderect(paddleRed):
                 self.velocityY *= -1
             elif self.y + self.radius > screen_height:
-                game.nbrRedBalls -=1
+                    self.x = 2 * screen_width
+                    self.y = screen_height//2
+                    self.velocityX = 1
+                    self.velocityY = 0
+                    game.nbrRedBalls -=1
+                    print(game.nbrRedBalls)
         else:
             if ball.colliderect(paddleBlue):
                 self.velocityY *= -1
             elif self.y + self.radius > screen_height:
+                self.x = 2 * screen_width
+                self.y = screen_height//2   
+                self.velocityX = 0
+                self.velocityY = 0
                 game.nbrBlueBalls -=1
+                print(game.nbrBlueBalls)
 
         if  self.y - self.radius < 0 : 
             self.velocityY *= -1
@@ -166,7 +177,7 @@ y = screen_height / 1.3 # redBasePlace[1]+200
 color = RED
 redBall = Ball(x, y, ballRadius, color)
 redBalls.append(redBall)
-redBall.draw()
+sprites.append(redBall.draw())
 
 
 blueBalls = []
@@ -175,8 +186,7 @@ y =  screen_height / 1.3  # blueBasePlace[1]+200
 color = BLUE
 blueBall = Ball(x, y, ballRadius, color)
 blueBalls.append(blueBall)
-
-blueBall.draw()
+sprites.append(blueBall.draw())
 
 
 print("screen_width ")
@@ -215,26 +225,43 @@ while game.GameFinish != True:
                 paddle_speedBlue = -10
             elif event.key == pygame.K_d:
                 paddle_speedBlue = 10
+            if event.key == pygame.K_r:
+                print(event.key)
+                newRedBalls = []
+                for i in redBalls:
+                     for y in range(3):
+                        x = i.x
+                        y = i.y
+                        ball = Ball(x, y, ballRadius, RED)
+                        newRedBalls.append(ball)
+                        sprites.append(ball.draw())
+                        game.nbrRedBalls +=1
+                print(game.nbrRedBalls)
+
+                for ball in newRedBalls:
+                    redBalls.append(ball)
+
+            if event.key == pygame.K_b:
+                print(event.key)
+                newBlueBalls = []
+                for i in blueBalls:
+                    for y in range(3):
+                        x = i.x
+                        y = i.y
+                        ball = Ball(x, y, ballRadius, BLUE)
+                        newBlueBalls.append(ball)
+                        sprites.append(ball.draw())
+                        game.nbrBlueBalls +=1
+                print(game.nbrBlueBalls)
+                for ball in newBlueBalls:
+                    blueBalls.append(ball)
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 paddle_speedRed = 0
             if event.key == pygame.K_q or event.key == pygame.K_d:
                 paddle_speedBlue = 0
-        elif event.type == pygame.KEYDOWN:
-            if event.button == pygame.K_r:
-                for i in redBalls:
-                    x = i.x
-                    y = i.y
-                    ball = Ball(x, y, ballRadius, RED)
-                    redBalls.append(ball)
-                    ball.draw()
-            if event.button == pygame.K_b:
-                for i in blueBalls:
-                    x = i.x
-                    y = i.y
-                    ball = Ball(x, y, ballRadius, BLUE)
-                    blueBalls.append(ball)
-                    ball.draw()
+        
+
 
 
 
