@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
- 
+import os
 app = Flask(__name__)
 
 global_var = True
@@ -166,7 +166,8 @@ def update_bonus():
 @app.route('/start', methods=['POST'])
 def start_game():
      mapNumber = int(request.form['mapNumber'])
-     start.set = True
+     start.set(True)
+     return f"Le jeux à commencé sur la map : {mapNumber}"
      
         
 @app.route('/update_pause', methods=['POST'])
@@ -181,9 +182,10 @@ def updatePoints():
     pointsPlayer1.set(int(request.form.get("pointsPlayer1")))
     pointsPlayer2.set(int(request.form.get("pointsPlayer2")))
     return f"py pause : {pointsPlayer1.get(),pointsPlayer2.get()}"
+
 @app.route('/recupValeurInPy')
 def get_bonus1():
-    return jsonify(bonus1.get(),bonus2.get(),bonus3.get(),bonus4.get(),pointsPlayer1.get(),pointsPlayer2.get(),pause.get(),bonus5.get(),bonus6.get(),bonus7.get(),bonus8.get())
+    return jsonify(bonus1.get(),bonus2.get(),bonus3.get(),bonus4.get(),pointsPlayer1.get(),pointsPlayer2.get(),pause.get(),bonus5.get(),bonus6.get(),bonus7.get(),bonus8.get(),start.get())
 
 
 
@@ -191,6 +193,10 @@ def get_bonus1():
 
 @app.route("/")
 def index():
+    """
+    IMGFOLDER= os.path.join("static",'templates')
+    app.config[]"""
+    #filename = os.path.join(app.config["./"],"map0.png")
     # Pass global variable value to template
     return render_template("index.html", global_var=global_var)
 
@@ -199,7 +205,7 @@ def index():
 def player1():
     # Pass global variable value to template
     return render_template("player1.html", global_var=global_var)
-
+global_var
 @app.route("/player2")
 def player2():
     # Pass global variable value to template

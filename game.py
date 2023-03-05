@@ -152,6 +152,7 @@ class pointsPlayer2 ():
 pointsPlayer2 = pointsPlayer2()
 
 
+
 class start ():
     def __init__(self):
         self.start  = False
@@ -215,6 +216,9 @@ def setAllData():
     bonus6.set(response[8])
     bonus7.set(response[9])
     bonus8.set(response[10])
+    start.set(response[11])
+    print("GEEEEETTTT:: ",start.get())
+
 
 WHITE = (255,255,255)
 BLACK = (0,0,0)
@@ -456,8 +460,9 @@ def UI():
     createBlueBall()
     createRedBall()
 
+    mapNumber = 3
     #creation en fonction de la map
-    actualMatrixe = getMatrixes(1)
+    actualMatrixe = getMatrixes(mapNumber)
     tauxAtout = 1
     mapWidth = actualMatrixe[0] +5
     #print(mapWidth)
@@ -504,7 +509,9 @@ def UI():
                 bricks.append(brickX)
                 nbrBlocks.set(nbrBlocks.get()+1)
 
-
+    while(not start.get()):
+        setAllData()
+        time.sleep(0.5)
     while end.get() != True:
         while pause.get():
             setAllData()
