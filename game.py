@@ -195,7 +195,7 @@ sprites.append(blueBall.draw())
 
 
 #creation en fonction de la map
-actualMatrixe = getMatrixes(1)
+actualMatrixe = getMatrixes(5)
 mapWidth = actualMatrixe[0] +5
 print(mapWidth)
 mapHeight = actualMatrixe[1] +4
