@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Launch first command in new tab
-gnome-terminal --tab --title="Flask" --command="python3 testReq.py"
+gnome-terminal --tab --title="Flask"  -- bash -c "python3 phoneServer.py"
 
 # Launch second command in new tab
-gnome-terminal --tab --title="Tab 2" --command=" sleep 5 | python3 game_copy.py"
+gnome-terminal --tab --title="Game"  -- bash -c "python3 game.py"

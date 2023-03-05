@@ -218,7 +218,7 @@ def setAllData():
     bonus7.set(response[9])
     bonus8.set(response[10])
     start.set(response[11])
-    print("UPDATE START TO: ",start.get())
+    # print("UPDATE START TO: ",start.get())
 
 WHITE = (255,255,255)
 BLACK = (0,0,0)
@@ -269,7 +269,6 @@ def UI():
             self.velocityX = 0
             self.velocityY = ballVelocity
             self.nbrAtout = nbrAtout
-            self.color = WHITE
 
         def update(self):
 
@@ -277,36 +276,43 @@ def UI():
 
             atout = self.draw()
             
-            if self.y + self.radius > screen_height:
-                if self.color == RED:    
-                    print("INNNN")
-                    self.x = 2 * screen_width
-                    self.y = screen_height//2
-                    self.velocityX = 1
-                    self.velocityY = 0
-                    if self.nbrAtout == 1:
-                        bonus1.set(True)
-                    if self.nbrAtout == 2:
-                        bonus2.set(True)
-                    if self.nbrAtout == 3:
-                        bonus3.set(True)
-                    if self.nbrAtout == 4:
-                        bonus4.set(True)
+            if atout.colliderect(paddleRed):
+                self.x = 2 * screen_width
+                self.y = screen_height//2
+                self.velocityX = 0
+                self.velocityY = 0
+                atouts.remove(self)
+                if self.nbrAtout == 1:
+                    bonus1.set(True)
+                if self.nbrAtout == 2:
+                    bonus2.set(True)
+                if self.nbrAtout == 3:
+                    bonus3.set(True)
+                if self.nbrAtout == 4:
+                    bonus4.set(True)
                         
-                else:
-                    self.x = 2 * screen_width
-                    self.y = screen_height//2   
-                    self.velocityX = 0
-                    self.velocityY = 0
-                    if self.nbrAtout == 1:
-                        bonus5.set(True)
-                    if self.nbrAtout == 2:
-                        bonus6.set(True)
-                    if self.nbrAtout == 3:
-                        bonus7.set(True)
-                    if self.nbrAtout == 4:
-                        bonus8.set(True)
-        
+            elif atout.colliderect(paddleBlue):
+                self.x = 2 * screen_width
+                self.y = screen_height//2   
+                self.velocityX = 0
+                self.velocityY = 0
+                atouts.remove(self)
+                if self.nbrAtout == 1:
+                    bonus5.set(True)
+                if self.nbrAtout == 2:
+                    bonus6.set(True)
+                if self.nbrAtout == 3:
+                    bonus7.set(True)
+                if self.nbrAtout == 4:
+                    bonus8.set(True)
+                    
+            if self.y + self.radius > screen_height:
+                self.x = 2 * screen_width
+                self.y = screen_height//2   
+                self.velocityX = 0
+                self.velocityY = 0
+                atouts.remove(self)              
+    
         def draw(self):
             if self.nbrAtout == 1:
                 color = CITROUILLE
@@ -389,7 +395,6 @@ def UI():
                         self.velocityX = 1
                         self.velocityY = 0
                         nbrRedBalls.set(nbrRedBalls.get()-1)
-                        print("nbrRedBalls",nbrRedBalls.get())
             else:
                 if ball.colliderect(paddleBlue):
                     self.velocityY *= -1
@@ -399,7 +404,6 @@ def UI():
                     self.velocityX = 0
                     self.velocityY = 0
                     nbrBlueBalls.set(nbrBlueBalls.get()-1)
-                    print("nbrBlueBalls",nbrBlueBalls.get())
 
             if  self.y - self.radius < 0 : 
                 self.velocityY *= -1
@@ -461,14 +465,13 @@ def UI():
     createRedBall()
 
     #creation en fonction de la map
-    print("Take the matrix: ",start.get())
     while(start.get()==-1):
         font_path = os.path.join("fonts", "Robus-BWqOd.otf")
         background_image = pygame.image.load("img/427159.jpg")
         background_rect = background_image.get_rect()
         background_x = screen_width // 2 - background_rect.width // 2
         background_y = screen_height // 2 - background_rect.height // 2
-        title_font = pygame.font.Font(font_path,int((screen_width // 5)* 1.5)//43)
+        title_font = pygame.font.Font(font_path,int((screen_width // 5)* 1.5)//4*3)
         title = title_font.render("P-BOYZ", True, (255, 255, 255))
         text_font = pygame.font.Font(font_path, int(((screen_width // 5) *1.5)//4))
         text = text_font.render("Lancer le jeu sur votre telephone", True, (255, 255, 255))
@@ -484,7 +487,7 @@ def UI():
         pygame.display.update()
         setAllData()
     actualMatrixe = getMatrixes(start.get())
-    tauxAtout = 1
+    tauxAtout = 5
     mapWidth = actualMatrixe[0] +5
     #print(mapWidth)
     mapHeight = actualMatrixe[1] +4
@@ -562,7 +565,7 @@ def UI():
                 for y in range(3):
                     x = i.x
                     y = i.y
-                    ball = Ball(x, y, ballRadius, BLUE)
+                    ball = Ball(x, y, ballRadius, WHITE)
                     newBlueBalls.append(ball)
                     sprites.append(ball.draw())
                     nbrBlueBalls.set(nbrBlueBalls.get() + 1)
@@ -644,7 +647,6 @@ def UI():
         clock.tick(60)
         updateBackgroundImage()    
         if nbrBlueBalls.get() <= 0:
-            print(nbrBlocks.get())
             end.set(True)
             playsound.playsound("./sounds/Redwins.mp3")
             break
@@ -652,7 +654,10 @@ def UI():
             end.set(True)
             playsound.playsound("./sounds/Bluewins.mp3")
             break
-        
+        if nbrBlocks.get() <= 0:
+            end.set(True)
+            playsound.playsound("./sounds/Bluewins.mp3")
+            break
     pygame.quit()
     cv2.destroyAllWindows()
     return 0
