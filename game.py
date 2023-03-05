@@ -93,25 +93,21 @@ class Ball:
         
         
         
-        for sprite in pygame.sprite.Group().sprites():
-            
-            if sprite.rect.collidepoint(self.x, self.y):
-                if self.color == RED:
-                    print(self.color)
-                    if pygame.sprite.collide_mask(sprite, paddleRed):
-                        self.velocityY *= -1
-                else:
-                    if pygame.sprite.collide_mask(sprite, paddleBlue):
-                        self.velocityY *= -1
+        
+        if self.color == RED:
+            if self.draw().colliderect(paddleRed):
+                self.velocityY *= -1
+        else:
+            if self.draw().colliderect(paddleBlue):
+                self.velocityY *= -1
 
-        if  self.y - self.radius < 0 : # or self.y + self.radius > screen_height:
+        if  self.y - self.radius < 0 : 
             self.velocityY *= -1
            
 
         
     def draw(self):
-        pygame.draw.circle(screen, self.color, (int(self.x), int(self.y)), self.radius)
-
+        return pygame.draw.circle(screen, self.color, (int(self.x), int(self.y)), self.radius)
 
 pygame.init()
 
