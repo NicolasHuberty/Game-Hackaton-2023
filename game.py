@@ -99,7 +99,9 @@ class Ball:
                 if (ball.right > brick.left and ball.left < brick.left) or (ball.left < brick.right and ball.right > brick.right):
                     self.velocityX = -self.velocityX
                 break
-
+        
+       
+            
         
         if self.x - self.radius < 0  or self.x + self.radius > screen_width:
             self.velocityX *= -1
@@ -107,9 +109,13 @@ class Ball:
         if self.color == RED:
             if ball.colliderect(paddleRed):
                 self.velocityY *= -1
+            elif self.y + self.radius > screen_height:
+                game.nbrRedBalls -=1
         else:
             if ball.colliderect(paddleBlue):
                 self.velocityY *= -1
+            elif self.y + self.radius > screen_height:
+                game.nbrBlueBalls -=1
 
         if  self.y - self.radius < 0 : 
             self.velocityY *= -1
@@ -266,5 +272,11 @@ while game.GameFinish != True:
     pygame.display.flip()
     clock.tick(60)
     updateBackgroundImage()    
+
+    if game.nbrBlueBalls <= 0:
+        game.GameFinish = True
+    if game.nbrRedBalls <= 0:
+        game.GameFinish = True
+    
 
 pygame.quit()
