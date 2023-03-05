@@ -10,7 +10,7 @@ WHITE = (255,255,255)
 BLACK = (0,0,0)
 RED =(255,0,0)
 GREEN =(0,255,0)
-BLEU =(0,0,255)
+BLUE =(0,0,255)
 
 class Game:
     def __init__(self, x, y, nbrBlocks):
@@ -21,6 +21,8 @@ class Game:
         self.nbrBlocks = nbrBlocks
         self.GameFinish = False
         self.matrix = [[0 for j in range(y)] for i in range(x)]
+        self.nbrRedBalls = 1
+        self.nbrBlueBalls = 1
 
         global pointBlue
         pointBlue = 0
@@ -33,8 +35,12 @@ class Game:
         global start
         start = False
         global pause
-        pause = False  
-        
+        pause = False
+        global ballRadius
+        ballRadius = 10
+        global ballVelocity
+        ballVelocity = 5
+
     def choose(self,choose):
         if choose == 1:
             for i in range(0,(self.x),1):
@@ -58,59 +64,66 @@ class Game:
         return self.matrix[pos[0]][pos[1]]
                 
 
-
-class Block:
-    def __init__(self, pos, outLigne):
-        self.position = pos
-        if outLigne == True:
-            self.durte = 1
-        else:
-            self.durte = sys.maxsize
-    
-    def hit(self):
-        self.durte = self.durte -1
-
-        if self.durte <= 0:
-            Game.removeBlock(self.position)
-
-
-
 class Ball:
-    def __init__(self, pos , direction , speed, size, color):
-        self.position = pos
-        self.direction = []
-        self.direction[0] = direction[0] 
-        self.direction[1] = direction[1] 
-        self.speed = speed
-        self.size = size
+    def __init__(self, x, y, radius, color):
+        self.x = x
+        self.y = y
+        self.radius = radius
         self.color = color
-        self.alive = True
+        
+        if random.randint(0,1) == 1:
+            self.velocityX = ballVelocity 
+        else:
+            self.velocityX = -ballVelocity
+         
+        if random.randint(0,1) == 1:
+            self.velocityY = ballVelocity
+        else:
+            self.velocityY = -ballVelocity
+        '''
+        self.velocityX =  random.randint(-15,15)
+        self.velocityY =  random.randint(-15,15)
+        '''
+    def update(self):
+        self.x += self.velocityX /2
+        self.y += self.velocityY /2
 
-    def bouger(self):
-        while self.alive:
-            positionSuivante = []
-            positionSuivante[0] = 1 if self.direction[0] > self.position[0] else -1 if self.direction[0] < self.position[0] else 0
-            positionSuivante[1] = 1 if self.direction[1] > self.position[1] else -1 if self.direction[1] < self.position[1] else 0   
+        ball = self.draw()
 
-            if positionSuivante[0] > game.x:
-                self.alive = False
-                return
+         # Check for collision with bricks
+        for brick in bricks:
+            if ball.colliderect(brick):
+                bricks.remove(brick)
+                if (ball.bottom > brick.top and ball.top < brick.top) or (ball.top < brick.bottom and ball.bottom > brick.bottom):   
+                    self.velocityY = -self.velocityY
+                if (ball.right > brick.left and ball.left < brick.left) or (ball.left < brick.right and ball.right > brick.right):
+                    self.velocityX = -self.velocityX
+                break
+        
+       
+            
+        
+        if self.x - self.radius < 0  or self.x + self.radius > screen_width:
+            self.velocityX *= -1
+        
+        if self.color == RED:
+            if ball.colliderect(paddleRed):
+                self.velocityY *= -1
+            elif self.y + self.radius > screen_height:
+                game.nbrRedBalls -=1
+        else:
+            if ball.colliderect(paddleBlue):
+                self.velocityY *= -1
+            elif self.y + self.radius > screen_height:
+                game.nbrBlueBalls -=1
 
-            next = Game.GetFroPosition(game,positionSuivante)
+        if  self.y - self.radius < 0 : 
+            self.velocityY *= -1
+           
 
-            if next == None:
-                self.position = positionSuivante
-            else:
-                self.changerDirrection()
-                Block.hit(next)
-
-
-
-    
-    def changerDirrection(self, direction_x , direction_y):
-        self.direction_x = direction_x
-        self.direction_y = direction_y
-
+        
+    def draw(self):
+        return pygame.draw.circle(screen, self.color, (int(self.x), int(self.y)), self.radius)
 
 pygame.init()
 
@@ -134,22 +147,49 @@ def updateBackgroundImage():
 updateBackgroundImage()
 game = Game(100,100,20)
 
+redBasePlace = []
+redBasePlace = screen_width // 1.5 - 70, screen_height - 50
+blueBasePlace = []
+blueBasePlace = screen_width // 2.5 - 70, screen_height - 50
+
 #gestion de la barre
-paddleRed = pygame.Rect(screen_width // 1.5 - 70, screen_height - 50, 140, 20)
-paddleBlue = pygame.Rect(screen_width // 2.5 - 70, screen_height - 50, 140, 20)
+paddleRed = pygame.Rect(redBasePlace[0], redBasePlace[1], 140, 20)
+paddleBlue = pygame.Rect(blueBasePlace[0], blueBasePlace[1], 140, 20)
 
 paddle_speedRed = 0
 paddle_speedBlue = 0
 
+#gestion des balles
+redBalls = []
+x = screen_width /2 - 10 # redBasePlace[0]+ 10
+y = screen_height / 1.3 # redBasePlace[1]+200
+color = RED
+redBall = Ball(x, y, ballRadius, color)
+redBalls.append(redBall)
+redBall.draw()
+
+
+blueBalls = []
+x =  screen_width /2 + 10 # blueBasePlace[0]+10
+y =  screen_height / 1.3  # blueBasePlace[1]+200
+color = BLUE
+blueBall = Ball(x, y, ballRadius, color)
+blueBalls.append(blueBall)
+
+blueBall.draw()
+
 
 print("screen_width ")
 print(screen_width)
+
+
 
 #creation des briques
 brick_width = 40
 brick_height = 20
 brick_spacing = 10
 bricks = []
+
 for i in range(screen_width// (brick_spacing + brick_width)):
     brick_x = brick_spacing + i * (brick_width + brick_spacing)
     for j in range(int((screen_height // (brick_spacing + brick_height)//1.5))):
@@ -180,7 +220,32 @@ while game.GameFinish != True:
                 paddle_speedRed = 0
             if event.key == pygame.K_q or event.key == pygame.K_d:
                 paddle_speedBlue = 0
-   
+        elif event.type == pygame.KEYDOWN:
+            if event.button == pygame.K_r:
+                for i in redBalls:
+                    x = i.x
+                    y = i.y
+                    ball = Ball(x, y, ballRadius, RED)
+                    redBalls.append(ball)
+                    ball.draw()
+            if event.button == pygame.K_b:
+                for i in blueBalls:
+                    x = i.x
+                    y = i.y
+                    ball = Ball(x, y, ballRadius, BLUE)
+                    blueBalls.append(ball)
+                    ball.draw()
+
+
+
+    #move the balls
+    for ball in redBalls:
+        ball.update()
+      #  print("update Red Balls")
+    for ball in blueBalls:
+        ball.update()
+    #  print("BlueBalls update")
+      
     # Move the paddleRed
     paddleRed.x += paddle_speedRed
     if paddleRed.left < 0:
@@ -195,19 +260,23 @@ while game.GameFinish != True:
     elif paddleBlue.right > screen_width:
         paddleBlue.right = screen_width
 
+    
+
 
     pygame.draw.rect(screen, RED, paddleRed)
-    pygame.draw.rect(screen, BLEU, paddleBlue)
-    pygame.draw.circle(screen, BLEU, (480, 540), 10)
-    pygame.draw.circle(screen, RED, (1440, 540), 10)
+    pygame.draw.rect(screen, BLUE, paddleBlue)
 
     for brick in bricks:
-        pygame.draw.rect(screen, RED, brick)
+        pygame.draw.rect(screen, WHITE, brick)
     
-    # Update the screen and clock
     pygame.display.flip()
     clock.tick(60)
-    updateBackgroundImage()
+    updateBackgroundImage()    
+
+    if game.nbrBlueBalls <= 0:
+        game.GameFinish = True
+    if game.nbrRedBalls <= 0:
+        game.GameFinish = True
     
 
 pygame.quit()
