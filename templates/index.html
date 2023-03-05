@@ -105,16 +105,16 @@
 <body>
 	<h1>P-Boyz</h1>
 	<ul id="imageList">
-		<li><img src="map0.png" /></li>
-		<li><img src="map1.png" /></li>
-		<li><img src="map2.png" /></li>
-		<li><img src="map3.png" /></li>
-		<li><img src="map4.png" /></li>
-		<li><img src="map5.png" /></li>
+		<li><img src="https://images.2dehands.com/api/v1/listing-twh-p/images/8a/8a1ccce0-d0f9-44b8-b81a-3f654e2e39cf?rule=ecg_mp_eps$_86.jpg" /></li>
+		<li><img src="https://images.2dehands.com/api/v1/listing-twh-p/images/dd/dd48a7ca-749f-448a-8198-6a6ed977d7bc?rule=ecg_mp_eps$_86.jpg" /></li>
+		<li><img src="https://images.2dehands.com/api/v1/listing-twh-p/images/be/bed9d99c-be91-47f8-90ac-0e9dba4f66c9?rule=ecg_mp_eps$_86.jpg" /></li>
+		<li><img src="https://images.2dehands.com/api/v1/listing-twh-p/images/d6/d66ef9f8-9d32-40d6-8ec1-9ffea7641e93?rule=ecg_mp_eps$_86.jpg" /></li>
+		<li><img src="https://images.2dehands.com/api/v1/listing-twh-p/images/e2/e2e4a979-dd3d-4c52-9df8-f76f479af4f6?rule=ecg_mp_eps$_84.jpg" /></li>
+		<li><img src="https://images.2dehands.com/api/v1/listing-twh-p/images/4c/4cbe98ba-de6b-48fb-a401-4f5501d7f874?rule=ecg_mp_eps$_84.jpg" /></li>
+
 	</ul>
 	<div id="player-container">
 		<div id="player-buttons">
-			<button id="player1-button" class="toggle-button active" onclick="redirectToPlayerPage(1)">Player 1</button>
 			<button id="player2-button" class="toggle-button" onclick="redirectToPlayerPage(2)">Player 2</button>
 			<button id="start-game-button" class="toggle-button" onclick="startGame()">Start The Game</button>
 		</div>
@@ -146,9 +146,13 @@
 				url: "/start",
 				data: {
 					mapNumber: selectedMap
+				},
+				success: function(response) {
+                    console.log(response);
 				}
 			});
-			console.log('Le jeu a commencé sur la map : ' + selectedMap);
+			redirectToPlayerPage(1)
+			
 		}
 
 		// Toggle button functionality
