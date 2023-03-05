@@ -4,6 +4,7 @@ import sys
 import pygame
 import os 
 import subprocess
+from matrixe import *
 from pygame.locals import *
 WHITE = (255,255,255)
 BLACK = (0,0,0)
@@ -39,9 +40,11 @@ class Game:
         global ballRadius
         ballRadius = 10
         global ballVelocity
-        ballVelocity = 5
+        ballVelocity = 0.1
         global sprites
         sprites = []
+        global rect_vies 
+        rect_vies = {}
 
     def choose(self,choose):
         if choose == 1:
@@ -95,6 +98,8 @@ class Ball:
          # Check for collision with bricks
         for brick in bricks:
             if ball.colliderect(brick):
+                #rect_vies[brick] -=1
+                #if rect_vies[brick]<= 0:
                 bricks.remove(brick)
                 if (ball.bottom > brick.top and ball.top < brick.top) or (ball.top < brick.bottom and ball.bottom > brick.bottom):   
                     self.velocityY = -self.velocityY
@@ -172,8 +177,8 @@ paddle_speedBlue = 0
 
 #gestion des balles
 redBalls = []
-x = screen_width /2 - 10 # redBasePlace[0]+ 10
-y = screen_height / 1.3 # redBasePlace[1]+200
+x = redBasePlace[0] + 70 # screen_width /2 - 10 #
+y = redBasePlace[1]-20 # screen_height / 1.3 # 
 color = RED
 redBall = Ball(x, y, ballRadius, color)
 redBalls.append(redBall)
@@ -181,32 +186,43 @@ sprites.append(redBall.draw())
 
 
 blueBalls = []
-x =  screen_width /2 + 10 # blueBasePlace[0]+10
-y =  screen_height / 1.3  # blueBasePlace[1]+200
+x =   blueBasePlace[0] + 70 # screen_width /2 + 10 #
+y =  blueBasePlace[1]-20 # screen_height / 1.3  #
 color = BLUE
 blueBall = Ball(x, y, ballRadius, color)
 blueBalls.append(blueBall)
 sprites.append(blueBall.draw())
 
 
-print("screen_width ")
-print(screen_width)
-
+#creation en fonction de la map
+actualMatrixe = getMatrixes(1)
+mapWidth = actualMatrixe[0] +5
+print(mapWidth)
+mapHeight = actualMatrixe[1] +4
+print(mapHeight)
+matrix_data = actualMatrixe[2] 
 
 
 #creation des briques
-brick_width = 40
-brick_height = 20
-brick_spacing = 10
+brick_spacing = screen_width // 350
+brick_width = screen_width // (mapHeight)
+brick_height = screen_height // (mapWidth)
 bricks = []
 
-for i in range(screen_width// (brick_spacing + brick_width)):
+print(brick_spacing)
+print(brick_width)
+print(brick_height)
+
+for i in range(mapHeight-4):
     brick_x = brick_spacing + i * (brick_width + brick_spacing)
-    for j in range(int((screen_height // (brick_spacing + brick_height)//1.5))):
-        brick_y = brick_spacing + j * (brick_height + brick_spacing)
-        brick_rect = pygame.Rect(brick_x, brick_y, brick_width, brick_height)
-        bricks.append(brick_rect)
-        game.nbrBlocks +=1
+    for j in range(mapWidth-10):
+        if matrix_data[j][i] == 2:
+            brick_y = brick_spacing + j * (brick_height + brick_spacing)
+            brick_rect = pygame.Rect(brick_x, brick_y, brick_width, brick_height)
+            bricks.append(brick_rect)
+            #game.nbrBlocks +=1
+            #rect_vies[brick_rect] = 1
+        
 
 
 
