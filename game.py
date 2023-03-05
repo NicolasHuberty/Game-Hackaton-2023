@@ -87,18 +87,28 @@ class Ball:
     def update(self):
         self.x += self.velocityX /2
         self.y += self.velocityY /2
+
+        ball = self.draw()
+
+         # Check for collision with bricks
+        for brick in bricks:
+            if ball.colliderect(brick):
+                bricks.remove(brick)
+                if (ball.bottom > brick.top and ball.top < brick.top) or (ball.top < brick.bottom and ball.bottom > brick.bottom):   
+                    self.velocityY = -self.velocityY
+                if (ball.right > brick.left and ball.left < brick.left) or (ball.left < brick.right and ball.right > brick.right):
+                    self.velocityX = -self.velocityX
+                break
+
         
         if self.x - self.radius < 0  or self.x + self.radius > screen_width:
             self.velocityX *= -1
         
-        
-        
-        
         if self.color == RED:
-            if self.draw().colliderect(paddleRed):
+            if ball.colliderect(paddleRed):
                 self.velocityY *= -1
         else:
-            if self.draw().colliderect(paddleBlue):
+            if ball.colliderect(paddleBlue):
                 self.velocityY *= -1
 
         if  self.y - self.radius < 0 : 
@@ -146,7 +156,7 @@ paddle_speedBlue = 0
 #gestion des balles
 redBalls = []
 x = screen_width /2 - 10 # redBasePlace[0]+ 10
-y = screen_height / 2 # redBasePlace[1]+200
+y = screen_height / 1.3 # redBasePlace[1]+200
 color = RED
 redBall = Ball(x, y, ballRadius, color)
 redBalls.append(redBall)
@@ -155,7 +165,7 @@ redBall.draw()
 
 blueBalls = []
 x =  screen_width /2 + 10 # blueBasePlace[0]+10
-y =  screen_height / 2  # blueBasePlace[1]+200
+y =  screen_height / 1.3  # blueBasePlace[1]+200
 color = BLUE
 blueBall = Ball(x, y, ballRadius, color)
 blueBalls.append(blueBall)
@@ -173,14 +183,14 @@ brick_width = 40
 brick_height = 20
 brick_spacing = 10
 bricks = []
-'''
+
 for i in range(screen_width// (brick_spacing + brick_width)):
     brick_x = brick_spacing + i * (brick_width + brick_spacing)
     for j in range(int((screen_height // (brick_spacing + brick_height)//1.5))):
         brick_y = brick_spacing + j * (brick_height + brick_spacing)
         brick_rect = pygame.Rect(brick_x, brick_y, brick_width, brick_height)
         bricks.append(brick_rect)
-'''
+
 
 
 while game.GameFinish != True:
@@ -251,19 +261,10 @@ while game.GameFinish != True:
     pygame.draw.rect(screen, BLUE, paddleBlue)
 
     for brick in bricks:
-        pygame.draw.rect(screen, RED, brick)
+        pygame.draw.rect(screen, WHITE, brick)
     
     pygame.display.flip()
     clock.tick(60)
-    updateBackgroundImage()
-
-    for ball in redBalls:
-        ball.draw()
-      #  print("update Red Balls")
-    for ball in blueBalls:
-        ball.draw()
-    
-     # Update the screen and clock
-    
+    updateBackgroundImage()    
 
 pygame.quit()
