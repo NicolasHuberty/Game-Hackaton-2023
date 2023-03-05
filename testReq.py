@@ -148,6 +148,8 @@ class pause ():
 pause = pause()
 
 
+
+
 @app.route('/update_bonus', methods=['POST'])
 def update_bonus():
     bonus = str(request.form['bonus'])
@@ -161,6 +163,12 @@ def update_bonus():
     elif bonus == 'bonus8' : bonus8.set(bonusValue)
     return f"{bonus} : {bonusValue}"
 
+@app.route('/start', methods=['POST'])
+def start_game():
+     mapNumber = int(request.form['mapNumber'])
+     start.set = True
+     
+        
 @app.route('/update_pause', methods=['POST'])
 def update_pause():
     pause.set(str(request.form['pause']))

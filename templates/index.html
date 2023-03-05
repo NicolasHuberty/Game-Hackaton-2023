@@ -2,9 +2,19 @@
 <html>
 <head>
 	<title>Toggle Players</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: space-between;
+			min-height: 100vh;
+		}
+
 		.toggle-button {
 			display: inline-block;
 			padding: 10px;
@@ -14,44 +24,151 @@
 			color: #fff;
 			cursor: pointer;
 		}
+
 		.active {
 			background-color: green;
+		}
+
+		#imageList {
+			list-style: none;
+			display: flex;
+			flex-direction: row;
+			padding: 0;
+			margin: 0 auto;
+			max-width: 100%;
+			overflow-x: auto;
+			-webkit-overflow-scrolling: touch;
+			scrollbar-width: none;
+		}
+
+		#imageList::-webkit-scrollbar {
+			display: none;
+		}
+
+		#imageList li {
+			margin: 0;
+			padding: 0;
+		}
+
+		#imageList li img {
+			border: 2px solid transparent;
+			margin-right: 10px;
+			width: 280px;
+			height: 220px;
+			object-fit: cover;
+			cursor: pointer;
+		}
+
+		#imageList li img.selected {
+			border-color: yellow;
+			border-width: 10px;
+		}
+
+		#player-container {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			margin: auto;
+		}
+
+		#player-buttons {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			justify-content: center;
+			margin-bottom: 50px;
+		}
+
+		#player-buttons button {
+			margin: 0 10px;
+		}
+
+		#start-game-button {
+			display: block;
+			padding: 10px;
+			background-color: #ccc;
+			border: none;
+			border-radius: 5px;
+			color: #fff;
+			cursor: pointer;
+			margin-bottom: 50px;
+		}
+
+		@media only screen and (min-width: 768px) {
+			#imageList {
+				max-width: 80%;
+			}
 		}
 	</style>
 </head>
 <body>
-	<button id="player1-button" class="toggle-button active" onclick="redirectToPlayerPage(1)">Player 1</button>
-	<button id="player2-button" class="toggle-button" onclick="redirectToPlayerPage(2)">Player 2</button>
-	<button id="start-button" class="toggle-button" onclick="startGame()">Start The Game </button>
+	<h1>P-Boyz</h1>
+	<ul id="imageList">
+		<li><img src="map0.png" /></li>
+		<li><img src="map1.png" /></li>
+		<li><img src="map2.png" /></li>
+		<li><img src="map3.png" /></li>
+		<li><img src="map4.png" /></li>
+		<li><img src="map5.png" /></li>
+	</ul>
+	<div id="player-container">
+		<div id="player-buttons">
+			<button id="player1-button" class="toggle-button active" onclick="redirectToPlayerPage(1)">Player 1</button>
+			<button id="player2-button" class="toggle-button" onclick="redirectToPlayerPage(2)">Player 2</button>
+			<button id="start-game-button" class="toggle-button" onclick="startGame()">Start The Game</button>
+		</div>
+		
+	</div>
+	
 
 	<script>
+		let selectedMap = 3;
+
+		const images = document.querySelectorAll('#imageList li img');
+
+		images.forEach((image, index) => {
+			image.addEventListener('click', () => {
+				images.forEach(otherImage => otherImage.classList.remove('selected'));
+				image.classList.add('selected');
+				selectedMap = index;
+				console.log(`Map sélectionnée : ${selectedMap}`);
+			});
+		});
+
 		function redirectToPlayerPage(playerNumber) {
 			window.location.href = "/player" + playerNumber;
 		}
-		function startGame(){
+
+		function startGame() {
 			$.ajax({
-                type: "POST",
-                url: "/start",
-            });
-			console.log('Le jeux a commencèrent')
-        }
-		
+				type: "POST",
+				url: "/start",
+				data: {
+					mapNumber: selectedMap
+				}
+			});
+			console.log('Le jeu a commencé sur la map : ' + selectedMap);
+		}
 
 		// Toggle button functionality
-		document.addEventListener("DOMContentLoaded", function() {
+		document.addEventListener("DOMContentLoaded", function () {
 			let player1Button = document.getElementById("player1-button");
 			let player2Button = document.getElementById("player2-button");
 
-			player1Button.addEventListener("click", function() {
+			player1Button.addEventListener("click", function () {
 				player1Button.classList.add("active");
 				player2Button.classList.remove("active");
 			});
 
-			player2Button.addEventListener("click", function() {
+			player2Button.addEventListener("click", function () {
 				player2Button.classList.add("active");
 				player1Button.classList.remove("active");
 			});
 		});
 	</script>
+
 </body>
 </html>
+
+	
