@@ -22,6 +22,7 @@ class Game:
         self.matrix = [[0 for j in range(y)] for i in range(x)]
         self.nbrRedBalls = 1
         self.nbrBlueBalls = 1
+        
 
         global pointBlue
         pointBlue = 0
@@ -99,8 +100,7 @@ class Ball:
                     self.velocityY = -self.velocityY
                 if (ball.right > brick.left and ball.left < brick.left) or (ball.left < brick.right and ball.right > brick.right):
                     self.velocityX = -self.velocityX
-                break
-        
+                game.nbrBlocks -= 1        
        
             
         
@@ -206,6 +206,7 @@ for i in range(screen_width// (brick_spacing + brick_width)):
         brick_y = brick_spacing + j * (brick_height + brick_spacing)
         brick_rect = pygame.Rect(brick_x, brick_y, brick_width, brick_height)
         bricks.append(brick_rect)
+        game.nbrBlocks +=1
 
 
 
@@ -295,14 +296,17 @@ while game.GameFinish != True:
 
     for brick in bricks:
         pygame.draw.rect(screen, WHITE, brick)
+        
     
     pygame.display.flip()
     clock.tick(60)
     updateBackgroundImage()    
 
     if game.nbrBlueBalls <= 0:
+        print("RedWins")
         game.GameFinish = True
     if game.nbrRedBalls <= 0:
+        print("BlueWin")
         game.GameFinish = True
     
 
