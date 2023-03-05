@@ -3,7 +3,7 @@ import os
 import subprocess
 import json
 from pygame.locals import *
-import game
+import gameV18
 pygame.init()
 
 WHITE = (255,255,255)
@@ -45,7 +45,7 @@ text_rect = text.get_rect(center=(text_x + text.get_width() // 2, text_y + text.
 
 running = True
 while running:
-    if(game.pause.get()):
+    if(gameV18.pause.get()):
         running = False
         subprocess.Popen(["python", "game.py"])
         pygame.quit()    

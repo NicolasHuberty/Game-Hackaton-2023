@@ -1,6 +1,6 @@
 import cv2
 import json
-from game import modifyx1, modifyx2
+from gameV18 import modifyx1, modifyx2
 def getxPos():
     face_cascade = cv2.CascadeClassifier('./haarcascade_frontalface_default.xml')
     cap = cv2.VideoCapture(0)
