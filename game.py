@@ -3,6 +3,7 @@ import time
 import pygame
 from matrixe import *
 import cv2
+import os
 from threading import Thread
 from flask import Flask, render_template, request, jsonify
 import requests
@@ -509,9 +510,32 @@ def UI():
                 bricks.append(brickX)
                 nbrBlocks.set(nbrBlocks.get()+1)
 
-    while(not start.get()):
+
+    font_path = os.path.join("fonts", "Robus-BWqOd.otf")
+
+    background_image = pygame.image.load("img/427159.jpg")
+    background_rect = background_image.get_rect()
+    background_x = screen_width // 2 - background_rect.width // 2
+    background_y = screen_height // 2 - background_rect.height // 2
+    title_font = pygame.font.Font(font_path, int(((screen_width // 5) *1.5)/4*3))
+    title = title_font.render("P-BOYZ", True, (255, 255, 255))
+    text_font = pygame.font.Font(font_path, int(((screen_width // 5) *1.5)/4))
+    text = text_font.render("Lancer le jeu sur votre telephone", True, (255, 255, 255))
+    title_x = screen_width // 2 - title.get_width() // 2
+    title_y = 150
+    text_x = screen_width // 2 - text.get_width() // 2
+    text_y = screen_height // 1.5 - text.get_height() // 2
+    # Define the clickable area of the text as a Rect object
+    text_rect = text.get_rect(center=(text_x + text.get_width() // 2, text_y + text.get_height() // 2))
+    running = True
+    while not start.get():
+        screen.blit(background_image, (background_x, background_y))
+
+        screen.blit(title, (title_x, title_y))
+        screen.blit(text, (text_x, text_y))
+
+        pygame.display.update()
         setAllData()
-        time.sleep(0.5)
     while end.get() != True:
         while pause.get():
             setAllData()
