@@ -2,6 +2,8 @@
 <html>
 <head>
 	<title>Toggle Players</title>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 	<style>
 		.toggle-button {
 			display: inline-block;
@@ -20,11 +22,20 @@
 <body>
 	<button id="player1-button" class="toggle-button active" onclick="redirectToPlayerPage(1)">Player 1</button>
 	<button id="player2-button" class="toggle-button" onclick="redirectToPlayerPage(2)">Player 2</button>
+	<button id="start-button" class="toggle-button" onclick="startGame()">Start The Game </button>
 
 	<script>
 		function redirectToPlayerPage(playerNumber) {
 			window.location.href = "/player" + playerNumber;
 		}
+		function startGame(){
+			$.ajax({
+                type: "POST",
+                url: "/start",
+            });
+			console.log('Le jeux a commencèrent')
+        }
+		
 
 		// Toggle button functionality
 		document.addEventListener("DOMContentLoaded", function() {

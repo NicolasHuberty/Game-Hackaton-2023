@@ -19,52 +19,41 @@
         background-color: yellow;
         border: none;
         border-radius: 5px;
-        font-size: 16px;
+        font-size: 50px;
         font-weight: bold;
-      }
-      
-      .bonus-button:hover {
-        cursor: pointer;
-        background-color: orange;
       }
 
       .points-text {
         position: absolute;
         top: 10px;
         right: 10px;
-        font-size: 20px;
+        font-size: 50px;
         font-weight: bold;
       }
       .points-text2 {
         position: absolute;
-        top: 30px;
+        top: 100px;
         right: 10px;
-        font-size: 20px;
+        font-size:50px;
         font-weight: bold;
       }
       .pause-button {
         position: absolute;
-        top: 10px;
-        left: 10px;
         padding: 10px;
         background-color: blue;
-        border: none;
-        border-radius: 5px;
         color: white;
-        font-size: 16px;
-        font-weight: bold;
       }
-      
-      .pause-button:hover {
-        cursor: pointer;
-        background-color: navy;
+      #pause-button img {
+        width: 20%;
+        height: 20%;
       }
 
     </style>
   </head>
   
   <body>
-    <div id="pause-button" class="pause-button" onclick="updatePausePy()">Pause</div>
+    <button id="pause-button" class="pause-button" onclick="updatePausePy()"><img src="./img/pause.png"></button>
+    <i img src="./img/pause.png" onclick="updatePausePy()"></i>
     <div class="points-text">Points Player 1: <span id="points-player1">0</span></div>
     <div class="points-text2">Points Player 2: <span id="points-player2">0</span></div>
     <div class="container">
@@ -139,10 +128,9 @@
       
         
         setInterval(function() {
-            recupValeurInPy()
-            changePlayerPoint()
-            pauseGame()
-            //console.log('interval', pause)
+          //  recupValeurInPy()
+          //  changePlayerPoint()
+          //  pauseGame()
             if (pause == false) {
                 document.querySelector('.container').innerHTML = '';
                 if (bonus1== true) {

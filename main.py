@@ -1,8 +1,9 @@
 import pygame
 import os 
 import subprocess
+import json
 from pygame.locals import *
-
+import game
 pygame.init()
 
 WHITE = (255,255,255)
@@ -44,6 +45,10 @@ text_rect = text.get_rect(center=(text_x + text.get_width() // 2, text_y + text.
 
 running = True
 while running:
+    if(game.pause.get()):
+        running = False
+        subprocess.Popen(["python", "game.py"])
+        pygame.quit()    
     for event in pygame.event.get():
         if event.type == QUIT:
             running = False
@@ -53,7 +58,6 @@ while running:
                 subprocess.Popen(["python", "game.py"])
                 pygame.quit()
         elif event.type==pygame.KEYDOWN:
-                if event.key==pygame.K_x: #Pressing the x Key will quit the game
                      running=False  
 
     screen.blit(background_image, (background_x, background_y))

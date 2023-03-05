@@ -1,0 +1,53 @@
+.container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      
+      .bonus-button {
+        margin: 10px;
+        padding: 10px;
+        background-color: yellow;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: bold;
+      }
+      
+      .bonus-button:hover {
+        cursor: pointer;
+        background-color: orange;
+      }
+
+      .points-text {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 20px;
+        font-weight: bold;
+      }
+      .points-text2 {
+        position: absolute;
+        top: 30px;
+        right: 10px;
+        font-size: 20px;
+        font-weight: bold;
+      }
+      .pause-button {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        padding: 10px;
+        background-color: blue;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+      }
+      
+      .pause-button:hover {
+        cursor: pointer;
+        background-color: navy;
+      }
