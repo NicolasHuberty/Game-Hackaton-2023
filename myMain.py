@@ -3,14 +3,26 @@ import sys
 from threading import Thread
 from multiprocessing import Process
 import cv2
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
  
 class Game():
     def __init__(self):
         self.x1 = 0
         self.x2 = 0
         self.globalVar = False
-        self.app = Flask(__name__)
+        self.global_var = True
+        self.bonus1 = True
+        self.bonus2 = True
+        self.bonus3 = True
+        self.bonus4 = True
+        self.pointsPlayer1 = 0
+        self.pointsPlayer2 = 0
+        self.activeBonus = []
+        self.pause = False
+        self.bonus5 = True
+        self.bonus6 = True
+        self.bonus7 = True
+        self.bonus8 = True
         ui = Thread(target = self.ui)
         xPos = Thread(target = self.xPos)
         thread3 = Process(target = self.phone_connection)
@@ -19,19 +31,52 @@ class Game():
         thread3.start()
         
     def phone_connection(self):
-        @self.app.route("/")
+        app = Flask(__name__)
+        @app.route('/update_bonus', methods=['POST'])
+        def update_bonus():
+            bonus = str(request.form['bonus'])
+            bonusValue = request.form.get('bonusValue')
+            if bonus == 'bonus1' :   self.bonus1 = bonusValue
+            elif bonus == 'bonus2' : self.bonus2 = bonusValue
+            elif bonus == 'bonus3' : self.bonus3 = bonusValue
+            elif bonus == 'bonus4' : self.bonus4 = bonusValue
+            elif bonus == 'bonus5' : self.bonus5 = bonusValue
+            elif bonus == 'bonus6' : self.bonus6 = bonusValue
+            elif bonus == 'bonus7' : self.bonus7 = bonusValue
+            elif bonus == 'bonus8' : self.bonus8 = bonusValue
+            print(self.bonus2)
+            return f"{self.bonus2} : {bonusValue}"
+
+        @app.route('/update_pause', methods=['POST'])
+        def update_pause():
+            print(request.form["pause"])
+            self.pause = bool((request.form['pause'] == "true"))
+            print(self.pause)
+            return f"py pause : {self.pause}"
+
+        @app.route('/recupValeurInPy')
+        def get_bonus1():
+            return jsonify(self.bonus1,self.bonus2,self.bonus3,self.bonus4,self.pointsPlayer1,self.pointsPlayer2,self.pause,self.bonus5,self.bonus6,self.bonus7,self.bonus8)
+
+        @app.route("/")
         def index():
             # Pass global variable value to template
-            return render_template("index.html", globalVar=self.globalVar)
+            return render_template("index.html", global_var=self.global_var)
 
-        @self.app.route("/toggle")
-        def toggle():
-            # Toggle global variable value on button click
-            self.globalVar = True
-            return render_template("index.html", globalVar=self.globalVar)
+        @app.route("/player1")
+        def player1():
+            # Pass global variable value to template
+            return render_template("player1.html", global_var=self.global_var)
 
-        if __name__ == "__main__":
-            self.app.run(host="0.0.0.0", debug=True)
+        @app.route("/player2")
+        def player2():
+            # Pass global variable value to template
+            return render_template("player2.html", global_var=self.global_var)
+        app.run(host="0.0.0.0", debug=True)
+
+
+
+
 
     def xPos(self):
         face_cascade = cv2.CascadeClassifier('./haarcascade_frontalface_default.xml')
@@ -40,6 +85,7 @@ class Game():
             ret, frame = cap.read()
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             faces = face_cascade.detectMultiScale(gray, scaleFactor=1.3, minNeighbors=5)
+            faces = sorted(faces, key=lambda x: x[0])
             for (x, y, w, h) in faces:
                 cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
             if(len(faces) == 2):
@@ -118,44 +164,6 @@ class Game():
                     UIGame.removeBlock(self.position)
 
 
-
-        class Ball:
-            def __init__(self, pos , direction , speed, size, color):
-                self.position = pos
-                self.direction = []
-                self.direction[0] = direction[0] 
-                self.direction[1] = direction[1] 
-                self.speed = speed
-                self.size = size
-                self.color = color
-                self.alive = True
-
-            def bouger(self):
-                while self.alive:
-                    positionSuivante = []
-                    positionSuivante[0] = 1 if self.direction[0] > self.position[0] else -1 if self.direction[0] < self.position[0] else 0
-                    positionSuivante[1] = 1 if self.direction[1] > self.position[1] else -1 if self.direction[1] < self.position[1] else 0   
-
-                    if positionSuivante[0] > game.x:
-                        self.alive = False
-                        return
-
-                    next = UIGame.GetFroPosition(game,positionSuivante)
-
-                    if next == None:
-                        self.position = positionSuivante
-                    else:
-                        self.changerDirrection()
-                        Block.hit(next)
-
-
-
-            
-            def changerDirrection(self, direction_x , direction_y):
-                self.direction_x = direction_x
-                self.direction_y = direction_y
-
-
         pygame.init()
 
         info = pygame.display.Info()
@@ -223,14 +231,14 @@ class Game():
                         paddle_speedBlue = 0
         
             # Move the paddleRed
-            paddleRed.x = 1900 - (1900/500 * self.x1)
+            paddleRed.x = 1900 - 2.5*(1900/500 * self.x1)
             if paddleRed.left < 0:
                 paddleRed.left = 0
             elif paddleRed.right > screen_width:
                 paddleRed.right = screen_width
 
             # Move the paddleBlue
-            paddleBlue.x = 1900 - (1900/500 * self.x2)
+            paddleBlue.x = 1900 - 2.5*(1900/500 * (self.x2-250))
             if paddleBlue.left < 0:
                 paddleBlue.left = 0
             elif paddleBlue.right > screen_width:
