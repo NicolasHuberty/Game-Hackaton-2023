@@ -48,6 +48,8 @@ class bonus1():
     def get(self):
         return self.bonus1
     def set(self,value):
+        if(value):
+            requests.post("http://localhost:5000/update_bonus",data={"bonus":"bonus1","bonusValue":"true"})
         self.bonus1 = value
 bonus1 = bonus1()
 
@@ -57,6 +59,8 @@ class bonus2():
     def get(self):
         return self.bonus2
     def set(self,value):
+        if value:
+            requests.post("http://localhost:5000/update_bonus",data={"bonus":"bonus2","bonusValue":"true"})
         self.bonus2 = value
 bonus2 = bonus2()
 
@@ -66,6 +70,8 @@ class bonus3():
     def get(self):
         return self.bonus3
     def set(self,value):
+        if value:
+            requests.post("http://localhost:5000/update_bonus",data={"bonus":"bonus3","bonusValue":"true"})
         self.bonus3 = value
 bonus3 = bonus3()
 
@@ -75,6 +81,8 @@ class bonus4():
     def get(self):
         return self.bonus4
     def set(self,value):
+        if value:
+            requests.post("http://localhost:5000/update_bonus",data={"bonus":"bonus4","bonusValue":"true"})
         self.bonus4 = value
 bonus4 = bonus4()
 
@@ -84,6 +92,8 @@ class bonus5():
     def get(self):
         return self.bonus5
     def set(self,value):
+        if value:
+            requests.post("http://localhost:5000/update_bonus",data={"bonus":"bonus5","bonusValue":"true"})
         self.bonus5 = value
 bonus5 = bonus5()
 
@@ -93,6 +103,8 @@ class bonus6():
     def get(self):
         return self.bonus6
     def set(self,value):
+        if value:
+            requests.post("http://localhost:5000/update_bonus",data={"bonus":"bonus6","bonusValue":"true"})
         self.bonus6 = value
 bonus6 = bonus6()
 
@@ -102,6 +114,8 @@ class bonus7():
     def get(self):
         return self.bonus7
     def set(self,value):
+        if value:
+            requests.post("http://localhost:5000/update_bonus",data={"bonus":"bonus7","bonusValue":"true"})
         self.bonus7 = value
 bonus7 = bonus7()
 
@@ -111,6 +125,8 @@ class bonus8():
     def get(self):
         return self.bonus8
     def set(self,value):
+        if value:
+            requests.post("http://localhost:5000/update_bonus",data={"bonus":"bonus8","bonusValue":"true"})
         self.bonus8 = value
 bonus8 = bonus8()
 
@@ -121,7 +137,6 @@ class pointsPlayer1 ():
         return self.pointsPlayer1 
     def set(self,value):
         self.pointsPlayer1  = value
-        print("on call")
         requests.post("http://localhost:5000/updatePoints",data={"pointsPlayer1":value,"pointsPlayer2":pointsPlayer2.get()})
         
 pointsPlayer1 = pointsPlayer1()
@@ -133,7 +148,6 @@ class pointsPlayer2 ():
         return self.pointsPlayer2 
     def set(self,value):
         self.pointsPlayer2  = value
-        print("on call")
         requests.post("http://localhost:5000/updatePoints",data={"pointsPlayer1":pointsPlayer1.get(),"pointsPlayer2":value})
 pointsPlayer2 = pointsPlayer2()
 
@@ -190,6 +204,9 @@ class end():
     def set(self,value):
         self.end  = value
 end = end()
+def setAllData():
+    response = requests.get("http://localhost:5000/recupValeurInPy").json()
+    pause.set(response[6])
 
 WHITE = (255,255,255)
 BLACK = (0,0,0)
@@ -202,7 +219,7 @@ BORDAUX =(109,7,50)
 ballVelocity = 5
 ballRadius = 5
 sprites = []
-
+atouts = []
 #part telephon
 # part face recognition
 def getxPos():
@@ -228,6 +245,55 @@ def getxPos():
     
 
 def UI():
+    class Atout():
+        def __init__(self,x,y,radius,nbrAtout):
+            self.x = x
+            self.y = y
+            self.radius = radius
+            self.velocityX = 0
+            self.velocityY = ballVelocity
+            self.nbrAtout = nbrAtout
+            self.color = WHITE
+
+        def update(self):
+
+            self.y += self.velocityY /2
+
+            atout = self.draw()
+            
+            if self.y + self.radius > screen_height:
+                if self.color == RED:    
+                    print("INNNN")
+                    self.x = 2 * screen_width
+                    self.y = screen_height//2
+                    self.velocityX = 1
+                    self.velocityY = 0
+                    if self.nbrAtout == 1:
+                        bonus1.set(True)
+                    if self.nbrAtout == 2:
+                        bonus2.set(True)
+                    if self.nbrAtout == 3:
+                        bonus3.set(True)
+                    if self.nbrAtout == 4:
+                        bonus4.set(True)
+                        
+                else:
+                    print("INNNN")
+                    self.x = 2 * screen_width
+                    self.y = screen_height//2   
+                    self.velocityX = 0
+                    self.velocityY = 0
+                    if self.nbrAtout == 1:
+                        bonus5.set(True)
+                    if self.nbrAtout == 2:
+                        bonus6.set(True)
+                    if self.nbrAtout == 3:
+                        bonus7.set(True)
+                    if self.nbrAtout == 4:
+                        bonus8.set(True)
+        
+        def draw(self):
+            return pygame.draw.circle(screen, self.color, (int(self.x), int(self.y)), self.radius)
     class Ball:
         def __init__(self, x, y, radius, color):
             self.x = x
@@ -254,10 +320,17 @@ def UI():
             # Check for collision with bricks
             for i in bricks:
                 brick = i[1]
+                numAtout = 0
                 if ball.colliderect(brick):
                     i[0] -=1
+                    
                     if i[0] <= 0 and i[0] > -999:
+                        numAtout = i[2]
                         bricks.remove(i)
+                        if numAtout >  0: 
+                            atout = Atout(self.x,self.y,self.radius,numAtout)
+                            atouts.append(atout)
+                            atout.draw()
                     if (ball.bottom > brick.top and ball.top < brick.top) or (ball.top < brick.bottom and ball.bottom > brick.bottom):   
                         self.velocityY = -self.velocityY
                     if (ball.right > brick.left and ball.left < brick.left) or (ball.left < brick.right and ball.right > brick.right):
@@ -346,7 +419,7 @@ def UI():
     def createBlueBall():
         x =   blueBasePlace[0] + (sizeBluePadle.get()//2) # screen_width /2 + 10 #
         y =  blueBasePlace[1]-20 # screen_height / 1.3  #
-        color = BLUE
+        color = WHITE
         blueBall = Ball(x, y, ballRadius, color)
         blueBalls.append(blueBall)
         sprites.append(blueBall.draw())
@@ -355,6 +428,7 @@ def UI():
 
     #creation en fonction de la map
     actualMatrixe = getMatrixes(1)
+    tauxAtout = 1
     mapWidth = actualMatrixe[0] +5
     #print(mapWidth)
     mapHeight = actualMatrixe[1] +4
@@ -372,34 +446,40 @@ def UI():
     for i in range(mapHeight-4):
         brick_x = brick_spacing + i * (brick_width + brick_spacing)
         for j in range(mapWidth-10):
+            randomNum = random.randint(0,tauxAtout)
             if matrix_data[j][i] >= 2:
                 brick_y = brick_spacing + j * (brick_height + brick_spacing)
                 brick_rect = pygame.Rect(brick_x, brick_y, brick_width, brick_height)
                 brickX = []
                 brickX.append((matrix_data[j][i])-1) #vie
-
                 brickX.append(brick_rect)
-                #atout ? random brickX.append()
+                randomAtout = 0
+                if randomNum == 1:
+                    randomAtout = random.randint(1,4)
+                brickX.append(randomAtout)
                 bricks.append(brickX)
                 nbrBlocks.set(nbrBlocks.get()+1)
 
             if matrix_data[j][i] == 0:
+
                 brick_y = brick_spacing + j * (brick_height + brick_spacing)
                 brick_rect = pygame.Rect(brick_x, brick_y, brick_width, brick_height)
                 brickX = []
                 brickX.append(-9999)#vie &
                 brickX.append(brick_rect)
+                randomAtout = 0
+                if randomNum == 1:
+                    randomAtout = random.randint(1,4)
+                brickX.append(randomAtout)
                 bricks.append(brickX)
                 nbrBlocks.set(nbrBlocks.get()+1)
-                
-
 
 
     while end.get() != True:
-
         while pause.get():
+            setAllData()
             time.sleep(0.1)
-
+    
         # Handle events
         #X3 RED
         if bonus5.get() == "Active":
@@ -471,22 +551,23 @@ def UI():
         for ball in blueBalls:
             ball.update()
         #  print("BlueBalls update")
-        
-        paddleRed.x = 1900 - 2.5*((1900/500)*x1.get())
+        for atout in atouts:
+            atout.update()
+        paddleRed.x = 1900 - 2*((1900/500)*x1.get())
         if paddleRed.left < 0:
             paddleRed.left = 0
         elif paddleRed.right > screen_width:
             paddleRed.right = screen_width
 
         # Move the paddleBlue
-        paddleBlue.x = 1900 - 2.5*(1900/500*(x2.get()-250))
+        paddleBlue.x = 1900 - 2*(1900/500*(x2.get()-250))
         if paddleBlue.left < 0:
             paddleBlue.left = 0
         elif paddleBlue.right > screen_width:
             paddleBlue.right = screen_width
         
         pygame.draw.rect(screen, RED, paddleRed)
-        pygame.draw.rect(screen, BLUE, paddleBlue)
+        pygame.draw.rect(screen, WHITE, paddleBlue)
 
         for i in bricks:
             brick = i[1]
@@ -501,22 +582,19 @@ def UI():
             if color == 1:
                 pygame.draw.rect(screen, WHITE, brick)
                 
-        
+        setAllData()
         pygame.display.flip()
         clock.tick(60)
         updateBackgroundImage()    
-        print(nbrBlueBalls.get(),nbrRedBalls.get())
         if nbrBlueBalls.get() <= 0:
-            print("RedWins")
             print(nbrBlocks.get())
-            print("nbr poins r : ", pointsPlayer1.get())
-            #end.set(True)
+            end.set(True)
             playsound.playsound("./Redwins.mp3")
+            break
         if nbrRedBalls.get() <= 0:
-            print("nbr poins b : ", pointsPlayer2.get())
-            print("BlueWin")
-            #end.set(True)
+            end.set(True)
             playsound.playsound("./Bluewins.mp3")
+            break
         
     pygame.quit()
     cv2.destroyAllWindows()
