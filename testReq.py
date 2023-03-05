@@ -148,33 +148,43 @@ class pause ():
 pause = pause()
 
 
+
+
 @app.route('/update_bonus', methods=['POST'])
 def update_bonus():
     bonus = str(request.form['bonus'])
     bonusValue = request.form.get('bonusValue')
-    if bonus == 'bonus1' : bonus1.set(bonusValue)
-    elif bonus == 'bonus2' : bonus2.set(bonusValue)
-    elif bonus == 'bonus3' : bonus3.set(bonusValue)
-    elif bonus == 'bonus5' : bonus5.set(bonusValue)
-    elif bonus == 'bonus6' : bonus6.set(bonusValue)
-    elif bonus == 'bonus7' : bonus7.set(bonusValue)
-    elif bonus == 'bonus8' : bonus8.set(bonusValue)
+    print("BONUSSSS:",bonus,bonusValue)
+    if bonus == 'bonus1' : bonus1.set(bool(bonusValue=="true"))
+    elif bonus == 'bonus2' : bonus2.set(bool(bonusValue=="true"))
+    elif bonus == 'bonus3' : bonus3.set(bool(bonusValue=="true"))
+    elif bonus == 'bonus5' : bonus5.set(bool(bonusValue=="true"))
+    elif bonus == 'bonus6' : bonus6.set(bool(bonusValue=="true"))
+    elif bonus == 'bonus7' : bonus7.set(bool(bonusValue=="true"))
+    elif bonus == 'bonus8' : bonus8.set(bool(bonusValue=="true"))
+    print(bonus1.get(),bonus2.get(),bonus3.get(),bonus4.get(),bonus5.get(),bonus6.get(),bonus7.get(),bonus8.get())
     return f"{bonus} : {bonusValue}"
 
+@app.route('/start', methods=['POST'])
+def start_game():
+     mapNumber = int(request.form['mapNumber'])
+     start.set = True
+     
+        
 @app.route('/update_pause', methods=['POST'])
 def update_pause():
-    pause.set(str(request.form['pause']))
+    print()
+    print("PAUSE VAL:",(str(request.form['pause']) == "true"))
+    pause.set(str(request.form['pause']) == "true")
     return f"py pause : {pause}"
 
 @app.route('/updatePoints',methods=['POST'])
 def updatePoints():
-    print("Receive update")
     pointsPlayer1.set(int(request.form.get("pointsPlayer1")))
     pointsPlayer2.set(int(request.form.get("pointsPlayer2")))
     return f"py pause : {pointsPlayer1.get(),pointsPlayer2.get()}"
 @app.route('/recupValeurInPy')
 def get_bonus1():
-    print(pointsPlayer1.get(),pointsPlayer2.get())
     return jsonify(bonus1.get(),bonus2.get(),bonus3.get(),bonus4.get(),pointsPlayer1.get(),pointsPlayer2.get(),pause.get(),bonus5.get(),bonus6.get(),bonus7.get(),bonus8.get())
 
 
