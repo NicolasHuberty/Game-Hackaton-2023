@@ -224,8 +224,8 @@ BLUE =(0,0,255)
 GRAY =(128,128,128)
 BORDAUX =(109,7,50)
 
-ballVelocity = 5
-ballRadius = 5
+ballVelocity = 2
+ballRadius = 15
 sprites = []
 atouts = []
 #part telephon
